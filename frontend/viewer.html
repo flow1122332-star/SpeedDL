@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Instagram Stories Viewer - Anonymous Story Viewer | SpeedDL</title>
+<meta name="description" content="View Instagram Stories anonymously from public accounts. No login required. Free anonymous Instagram Stories Viewer by SpeedDL.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#7E17FF">
+
+<link rel="preload" href="assets/icons/favicon.png" as="image">
+<link rel="preload" href="assets/icons/logo.png" as="image">
+<link rel="preconnect" href="http://YOUR_BACKEND_URL">
+<link rel="dns-prefetch" href="http://YOUR_BACKEND_URL">
+
+<meta property="og:title" content="Instagram Stories Viewer - SpeedDL">
+<meta property="og:description" content="View Instagram Stories anonymously.">
+<meta property="og:image" content="https://speeddl.pages.dev/assets/icons/og-image.jpg">
+<meta property="og:url" content="https://speeddl.pages.dev/viewer.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SpeedDL">
+<meta property="og:locale" content="en">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Instagram Stories Viewer - SpeedDL">
+<meta name="twitter:description" content="View Instagram Stories anonymously.">
+<meta name="twitter:image" content="https://speeddl.pages.dev/assets/icons/og-image.jpg">
+
+<link rel="canonical" href="https://speeddl.pages.dev/viewer.html">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon-32x32.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type": "WebSite", "name": "SpeedDL", "url": "https://speeddl.pages.dev"},
+    {"@type": "WebPage", "name": "Instagram Stories Viewer - SpeedDL", "url": "https://speeddl.pages.dev/viewer.html", "inLanguage": "en"},
+    {"@type": "Organization", "name": "SpeedDL", "url": "https://speeddl.pages.dev"},
+    {"@type": "WebApplication", "name": "SpeedDL Stories Viewer", "url": "https://speeddl.pages.dev/viewer.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Windows, Linux, iOS, Android, macOS", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}},
+    {"@type": "FAQPage", "mainEntity": [
+      {"@type": "Question", "name": "Will Instagram know I viewed the story?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL loads public stories without logging into your account, so the owner is not notified and you do not appear in their viewers list."}},
+      {"@type": "Question", "name": "Is the anonymous Instagram viewer free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, it is completely free with no limits and no registration."}},
+      {"@type": "Question", "name": "Do I need to log in or create an account?", "acceptedAnswer": {"@type": "Answer", "text": "No login is ever required. SpeedDL never asks for your Instagram password."}},
+      {"@type": "Question", "name": "Can I view private accounts?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL only works with public Instagram accounts, in line with Instagram's rules."}},
+      {"@type": "Question", "name": "Can the person see my IP address?", "acceptedAnswer": {"@type": "Answer", "text": "No. The request goes through SpeedDL, not from you directly, so the account owner cannot see your IP."}},
+      {"@type": "Question", "name": "How is this different from a fake or burner account?", "acceptedAnswer": {"@type": "Answer", "text": "A burner account still appears in the viewers list and can be blocked. SpeedDL does not interact with the account at all, so you stay fully anonymous."}},
+      {"@type": "Question", "name": "Does Instagram notify screenshots of stories?", "acceptedAnswer": {"@type": "Answer", "text": "Instagram does not notify users of story screenshots. With SpeedDL you can also download the story instead of screenshotting."}},
+      {"@type": "Question", "name": "Can I download the stories I view?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, you can save public stories, highlights and posts to your device in original quality."}},
+      {"@type": "Question", "name": "Which devices does it work on?", "acceptedAnswer": {"@type": "Answer", "text": "Any device with a modern browser: iPhone, Android, Windows, and Mac."}},
+      {"@type": "Question", "name": "Do you store my activity or search history?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL does not keep logs of the profiles you view or any search history."}},
+      {"@type": "Question", "name": "Is it legal to view Instagram stories anonymously?", "acceptedAnswer": {"@type": "Answer", "text": "Viewing public content is generally legal. Use it responsibly and respect others' privacy and copyright."}},
+      {"@type": "Question", "name": "Why is SpeedDL free?", "acceptedAnswer": {"@type": "Answer", "text": "SpeedDL is supported by light advertising, which lets us keep the anonymous viewer free for everyone."}}
+    ]}
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="container hi">
+    <a href="/" class="logo">
+      <img src="assets/icons/favicon.png" alt="SpeedDL" width="42" height="42">
+      <span class="logo-text">SpeedDL</span>
+    </a>
+    <nav>
+      <a href="faq.html" class="keep">FAQ</a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
+        <img src="assets/icons/svg/moon.svg" alt="Dark mode" class="icon-moon" width="22" height="22">
+        <img src="assets/icons/svg/sun.svg" alt="Light mode" class="icon-sun" width="22" height="22">
+      </button>
+      <span class="lang-selector">EN</span>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+
+    <div class="cat-nav">
+      <a href="video.html" class="cat-btn"><img src="assets/icons/video.png" alt="Video" loading="lazy" width="18" height="18"><span>Video</span></a>
+      <a href="photo.html" class="cat-btn"><img src="assets/icons/photo.png" alt="Photo" loading="lazy" width="18" height="18"><span>Photo</span></a>
+      <a href="reels.html" class="cat-btn"><img src="assets/icons/reels.png" alt="Reels" loading="lazy" width="18" height="18"><span>Reels</span></a>
+      <a href="story.html" class="cat-btn"><img src="assets/icons/story.png" alt="Story" loading="lazy" width="18" height="18"><span>Story</span></a>
+      <a href="igtv.html" class="cat-btn"><img src="assets/icons/igtv.png" alt="Igtv" loading="lazy" width="18" height="18"><span>Igtv</span></a>
+      <a href="carousel.html" class="cat-btn"><img src="assets/icons/carousel.png" alt="Carousel" loading="lazy" width="18" height="18"><span>Carousel</span></a>
+      <a href="viewer.html" class="cat-btn active"><img src="assets/icons/viewer.png" alt="Viewer" loading="lazy" width="18" height="18"><span>Viewer</span></a>
+    </div>
+
+    <h1>Instagram Stories Viewer</h1>
+    <p class="subtitle">Anonymously Instagram Story Viewer</p>
+
+    <div class="input-box">
+      <input type="text" id="urlInput" placeholder="Insert instagram link here" autocomplete="off">
+      <button type="button" class="paste-btn" id="pasteBtn">
+        <img src="assets/icons/svg/clipboard.svg" alt="" width="16" height="16">
+        <span>Paste</span>
+      </button>
+      <button type="button" class="clear-btn hidden" id="clearBtn">
+        <img src="assets/icons/svg/close.svg" alt="" width="16" height="16">
+        <span>Clear</span>
+      </button>
+      <button id="downloadBtn">Download</button>
+    </div>
+    <p id="status" class="status"></p>
+
+    <img src="assets/icons/logo.png" alt="SpeedDL" class="hero-logo" width="380" height="95">
+  </div>
+</section>
+
+<section id="loading" class="loading-section hidden">
+  <div class="container">
+    <div class="loading-dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <p class="loading-text" id="loadingText">We are viewing the story. Please wait :)</p>
+  </div>
+</section>
+
+<section id="results" class="results-section hidden">
+  <div class="container">
+    <h2 class="result-heading">Search result</h2>
+    <div id="resultContent"></div>
+  </div>
+</section>
+
+<div id="homeContent">
+    <!-- Feature Showcase -->
+  <section class="section">
+    <div class="container">
+      <div class="feature-showcase">
+        <div class="feature-showcase-image">
+          <img src="assets/icons/Images/viewer-downloader.png" alt="Instagram Stories Viewer" loading="lazy">
+        </div>
+        <div class="feature-showcase-text">
+          <h2>Instagram Stories Viewer</h2>
+          <p>SpeedDL Instagram Stories Viewer is a complimentary tool that enables anonymous viewing of Instagram stories from public profiles without the need for Instagram user authentication. The platform offers a range of free features, allowing you to discreetly view stories without any extra steps, other than entering the user's Instagram handle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Use Viewer -->
+  <section id="how" class="section alt">
+    <div class="container">
+      <h2>How to use Instagram Story Viewer?</h2>
+      <p class="section-desc">See below the three easy steps to use this Instagram Story Viewer. It saves time and energy.</p>
+      <div class="steps">
+        <div class="step">
+          <img src="assets/icons/Images/step1.png" alt="Copy the URL" class="step-image" loading="lazy">
+          <h3>Copy the URL</h3>
+          <p>Open a post on where there is your favorite Instagram profile and copy the link.</p>
+        </div>
+        <div class="step">
+          <img src="assets/icons/Images/step2.png" alt="Paste the link" class="step-image" loading="lazy">
+          <h3>Paste the link</h3>
+          <p>Paste the link to the input line on the Instagram Story Viewer page. Remember to have the SpeedDL web page already opened.</p>
+        </div>
+        <div class="step">
+          <img src="assets/icons/Images/step3.png" alt="View and Download" class="step-image" loading="lazy">
+          <h3>View and Download</h3>
+          <p>Click the Download button to save the stories to your device.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Address Bar -->
+  <section class="section">
+    <div class="container">
+      <h2>View Instagram Stories from your address bar</h2>
+      <div class="address-bar-box">
+        <div class="ab-visual">
+          <div class="ab-url"><strong>sdl.app/</strong>https://www.instagram.com/stories/...</div>
+        </div>
+        <div class="ab-text">
+          <p>Add <code>sdl.app/</code> before any Instagram Story URL in your browser's address bar.</p>
+          <p>For example: <code>sdl.app/https://www.instagram.com/stories/username/...</code></p>
+          <p>Press Enter and you'll get the viewer page. View and download Stories anonymously in high quality.</p>
+          <p>Works on phones, tablets, and computers. No app, account, or Instagram login needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Viewer Feature Rows -->
+  <section class="section alt">
+    <div class="container">
+      <h2>SpeedDL Story Viewer</h2>
+      <p class="section-desc">An Instagram viewer is a third-party website or app that allows you to view Instagram posts, stories, and profiles anonymously without having an Instagram account or logging into one.</p>
+
+      <div class="feature-row">
+        <div class="feature-row-image"><img src="assets/icons/Images/viewer-downloader.png" alt="Instagram Story Viewer" loading="lazy"></div>
+        <div class="feature-row-text">
+          <h3>Instagram Story Viewer</h3>
+          <p>Currently, Instagram users do not have the option to download or save stories, highlights, or reels from Instagram directly. However, thanks to the Instagram Stories viewer, users now have this option. Additionally, the SpeedDL Instagram Highlights viewer allows you to anonymously view public user stories regardless of the device you are using.</p>
+        </div>
+      </div>
+
+      <div class="feature-row reverse">
+        <div class="feature-row-image"><img src="assets/icons/Images/story-downloader.png" alt="Anonymous Viewing" loading="lazy"></div>
+        <div class="feature-row-text">
+          <h3>How anonymous story viewing works</h3>
+          <p>When you watch a story while logged in, Instagram adds your username to that story's viewers list. An anonymous viewer cuts that link. Your account never makes the request; SpeedDL's server fetches the public story for you and streams it back to your browser. The owner sees an ordinary request for something that's already public, with nothing pointing at your profile.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <h2>Frequently asked questions (FAQ)</h2>
+      <p class="section-desc">This FAQ provides information on frequent questions or concerns about the SpeedDL Instagram viewer.</p>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>Will Instagram know I viewed the story?</h3>
+          <p>No. SpeedDL loads public stories without logging into your account, so the owner is not notified and you do not appear in their viewers list.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is the anonymous Instagram viewer free?</h3>
+          <p>Yes, it is completely free with no limits and no registration.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I need to log in or create an account?</h3>
+          <p>No login is ever required. SpeedDL never asks for your Instagram password.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I view private accounts?</h3>
+          <p>No. SpeedDL only works with public Instagram accounts, in line with Instagram's rules.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can the person see my IP address?</h3>
+          <p>No. The request goes through SpeedDL, not from you directly, so the account owner cannot see your IP.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How is this different from a fake or burner account?</h3>
+          <p>A burner account still appears in the viewers list and can be blocked. SpeedDL does not interact with the account at all, so you stay fully anonymous.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does Instagram notify screenshots of stories?</h3>
+          <p>Instagram does not notify users of story screenshots. With SpeedDL you can also download the story instead of screenshotting.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I download the stories I view?</h3>
+          <p>Yes, you can save public stories, highlights and posts to your device in original quality.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Which devices does it work on?</h3>
+          <p>Any device with a modern browser: iPhone, Android, Windows, and Mac.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do you store my activity or search history?</h3>
+          <p>No. SpeedDL does not keep logs of the profiles you view or any search history.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is it legal to view Instagram stories anonymously?</h3>
+          <p>Viewing public content is generally legal. Use it responsibly and respect others' privacy and copyright.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Why is SpeedDL free?</h3>
+          <p>SpeedDL is supported by light advertising, which lets us keep the anonymous viewer free for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container" style="text-align: center;">
+      <h2>View Instagram Stories Anonymously</h2>
+      <p>Watch Stories from public accounts without appearing in the viewers list. Free, fast, and no login.</p>
+      <a href="#how" class="cta-btn">
+        <span>Try for free</span>
+        <img src="assets/icons/svg/arrow.svg" alt="" width="20" height="20">
+      </a>
+      <div class="cta-features">
+        <span>Faster downloads</span>
+        <span>Always free</span>
+        <span>Cross-platform</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- END homeContent -->
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <img src="assets/icons/logo.png" alt="SpeedDL" class="footer-logo" loading="lazy" width="180" height="45">
+
+    <nav class="footer-nav-cats">
+      <a href="video.html">Video</a><span>|</span>
+      <a href="photo.html">Photo</a><span>|</span>
+      <a href="reels.html">Reels</a><span>|</span>
+      <a href="story.html">Story</a><span>|</span>
+      <a href="viewer.html">Viewer</a><span>|</span>
+      <a href="igtv.html">Igtv</a><span>|</span>
+      <a href="carousel.html">Carousel</a>
+    </nav>
+
+    <nav class="footer-nav-links">
+      <a href="about.html">About SpeedDL</a><span>|</span>
+      <a href="mp4.html">Instagram to MP4</a><span>|</span>
+      <a href="api.html">API</a><span>|</span>
+      <a href="mcp.html">MCP</a><span>|</span>
+      <a href="contact.html">Contact</a><span>|</span>
+      <a href="privacy.html">Privacy Policy</a><span>|</span>
+      <a href="terms.html">Terms &amp; Conditions</a><span>|</span>
+      <a href="dmca.html">DMCA</a>
+    </nav>
+
+    <p class="footer-social-label">follow us:</p>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.png" alt="Instagram" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="YouTube"><img src="assets/icons/youtube.png" alt="YouTube" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="X"><img src="assets/icons/twitter.png" alt="X" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="TikTok"><img src="assets/icons/tiktok.png" alt="TikTok" loading="lazy" width="22" height="22"></a>
+    </div>
+
+    <p class="footer-copy">© 2024-<span id="year"></span> SpeedDL. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+      </html>
