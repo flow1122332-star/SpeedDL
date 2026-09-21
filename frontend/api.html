@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Instagram API - SpeedDL</title>
+<meta name="description" content="SpeedDL Instagram API - Retrieve publicly available Instagram media and profile data.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#7E17FF">
+
+<link rel="preload" href="assets/icons/favicon.png" as="image">
+<link rel="preload" href="assets/icons/logo.png" as="image">
+
+<meta property="og:title" content="Instagram API - SpeedDL">
+<meta property="og:description" content="Retrieve publicly available Instagram media and profile data.">
+<meta property="og:image" content="https://speeddl.pages.dev/assets/icons/og-image.jpg">
+<meta property="og:url" content="https://speeddl.pages.dev/api.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SpeedDL">
+
+<link rel="canonical" href="https://speeddl.pages.dev/api.html">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="container hi">
+    <a href="/" class="logo">
+      <img src="assets/icons/favicon.png" alt="SpeedDL" width="42" height="42">
+      <span class="logo-text">SpeedDL</span>
+    </a>
+    <nav>
+      <a href="faq.html" class="keep">FAQ</a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
+        <img src="assets/icons/svg/moon.svg" alt="Dark mode" class="icon-moon" width="22" height="22">
+        <img src="assets/icons/svg/sun.svg" alt="Light mode" class="icon-sun" width="22" height="22">
+      </button>
+      <span class="lang-selector">EN</span>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Instagram API</h1>
+    <p class="subtitle">Retrieve publicly available Instagram media and profile data</p>
+  </div>
+</section>
+
+<div id="homeContent">
+
+  <section class="section">
+    <div class="container" style="max-width: 850px;">
+
+      <p style="color: var(--gray); font-size: 16px; line-height: 1.8; margin-bottom: 24px;">
+        Our Instagram API provides a simple way to retrieve publicly available Instagram media and profile data. With the API, you can access:
+      </p>
+
+      <ul style="color: var(--gray); font-size: 16px; line-height: 2.2; margin-left: 24px; margin-bottom: 30px;">
+        <li>Usernames, profile bios, and follower statistics</li>
+        <li>Public posts and reels with captions and media URLs</li>
+        <li>Timestamps, likes, and comment counts</li>
+        <li>Public stories and highlights</li>
+        <li>Followers, following, and post comments</li>
+      </ul>
+
+      <p style="color: var(--gray); font-size: 16px; line-height: 1.8; margin-bottom: 16px;">
+        To get access or learn more, contact us at
+        <a href="mailto:api@speeddl.app" style="color: var(--blue); font-weight: 600;">api@speeddl.app</a>.
+      </p>
+
+    </div>
+  </section>
+
+</div>
+<!-- END homeContent -->
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <img src="assets/icons/logo.png" alt="SpeedDL" class="footer-logo" loading="lazy" width="180" height="45">
+
+    <nav class="footer-nav-cats">
+      <a href="video.html">Video</a><span>|</span>
+      <a href="photo.html">Photo</a><span>|</span>
+      <a href="reels.html">Reels</a><span>|</span>
+      <a href="story.html">Story</a><span>|</span>
+      <a href="viewer.html">Viewer</a><span>|</span>
+      <a href="igtv.html">Igtv</a><span>|</span>
+      <a href="carousel.html">Carousel</a>
+    </nav>
+
+    <nav class="footer-nav-links">
+      <a href="about.html">About SpeedDL</a><span>|</span>
+      <a href="mp4.html">Instagram to MP4</a><span>|</span>
+      <a href="api.html">API</a><span>|</span>
+      <a href="mcp.html">MCP</a><span>|</span>
+      <a href="contact.html">Contact</a><span>|</span>
+      <a href="privacy.html">Privacy Policy</a><span>|</span>
+      <a href="terms.html">Terms &amp; Conditions</a><span>|</span>
+      <a href="dmca.html">DMCA</a>
+    </nav>
+
+    <p class="footer-social-label">follow us:</p>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.png" alt="Instagram" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="YouTube"><img src="assets/icons/youtube.png" alt="YouTube" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="X"><img src="assets/icons/twitter.png" alt="X" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="TikTok"><img src="assets/icons/tiktok.png" alt="TikTok" loading="lazy" width="22" height="22"></a>
+    </div>
+
+    <p class="footer-copy">© 2024-<span id="year"></span> SpeedDL. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+  </html>
