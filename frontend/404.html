@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Page Not Found - SpeedDL</title>
+<meta name="description" content="The page you are looking for could not be found.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#7E17FF">
+
+<link rel="preload" href="assets/icons/favicon.png" as="image">
+<link rel="preload" href="assets/icons/logo.png" as="image">
+
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="container hi">
+    <a href="/" class="logo">
+      <img src="assets/icons/favicon.png" alt="SpeedDL" width="42" height="42">
+      <span class="logo-text">SpeedDL</span>
+    </a>
+    <nav>
+      <a href="faq.html" class="keep">FAQ</a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
+        <img src="assets/icons/svg/moon.svg" alt="Dark mode" class="icon-moon" width="22" height="22">
+        <img src="assets/icons/svg/sun.svg" alt="Light mode" class="icon-sun" width="22" height="22">
+      </button>
+      <span class="lang-selector">EN</span>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding: 60px 0 40px;">
+  <div class="container">
+    <h1 style="font-size: 72px;">404</h1>
+    <p class="subtitle">This page doesn't exist</p>
+  </div>
+</section>
+
+<div id="homeContent">
+
+  <section class="section">
+    <div class="container" style="max-width: 600px; text-align: center;">
+      <p style="color: var(--gray); font-size: 17px; line-height: 1.8; margin-bottom: 30px;">
+        The page you're looking for may have been moved, removed, or never existed. Let's get you back on track.
+      </p>
+
+      <a href="/" class="cta-btn" style="display: inline-flex; margin-bottom: 30px;">
+        <span>Back to Home</span>
+        <img src="assets/icons/svg/arrow.svg" alt="" width="20" height="20">
+      </a>
+
+      <p style="color: var(--gray); font-size: 15px; margin-top: 30px;">Or try one of these:</p>
+
+      <div class="cat-nav" style="margin-top: 20px; justify-content: center; display: flex; flex-wrap: wrap; gap: 8px;">
+        <a href="video.html" class="cat-btn" style="background: var(--bg2); color: var(--text); border: 1px solid var(--border);">
+          <img src="assets/icons/video.png" alt="" width="16" height="16">
+          <span>Video</span>
+        </a>
+        <a href="photo.html" class="cat-btn" style="background: var(--bg2); color: var(--text); border: 1px solid var(--border);">
+          <img src="assets/icons/photo.png" alt="" width="16" height="16">
+          <span>Photo</span>
+        </a>
+        <a href="reels.html" class="cat-btn" style="background: var(--bg2); color: var(--text); border: 1px solid var(--border);">
+          <img src="assets/icons/reels.png" alt="" width="16" height="16">
+          <span>Reels</span>
+        </a>
+        <a href="faq.html" class="cat-btn" style="background: var(--bg2); color: var(--text); border: 1px solid var(--border);">
+          <span>FAQ</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <img src="assets/icons/logo.png" alt="SpeedDL" class="footer-logo" loading="lazy" width="180" height="45">
+
+    <nav class="footer-nav-cats">
+      <a href="video.html">Video</a><span>|</span>
+      <a href="photo.html">Photo</a><span>|</span>
+      <a href="reels.html">Reels</a><span>|</span>
+      <a href="story.html">Story</a><span>|</span>
+      <a href="viewer.html">Viewer</a><span>|</span>
+      <a href="igtv.html">Igtv</a><span>|</span>
+      <a href="carousel.html">Carousel</a>
+    </nav>
+
+    <nav class="footer-nav-links">
+      <a href="about.html">About SpeedDL</a><span>|</span>
+      <a href="mp4.html">Instagram to MP4</a><span>|</span>
+      <a href="api.html">API</a><span>|</span>
+      <a href="mcp.html">MCP</a><span>|</span>
+      <a href="contact.html">Contact</a><span>|</span>
+      <a href="privacy.html">Privacy Policy</a><span>|</span>
+      <a href="terms.html">Terms &amp; Conditions</a><span>|</span>
+      <a href="dmca.html">DMCA</a>
+    </nav>
+
+    <p class="footer-social-label">follow us:</p>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.png" alt="Instagram" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="YouTube"><img src="assets/icons/youtube.png" alt="YouTube" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="X"><img src="assets/icons/twitter.png" alt="X" loading="lazy" width="22" height="22"></a>
+      <a href="#" aria-label="TikTok"><img src="assets/icons/tiktok.png" alt="TikTok" loading="lazy" width="22" height="22"></a>
+    </div>
+
+    <p class="footer-copy">© 2024-<span id="year"></span> SpeedDL. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
