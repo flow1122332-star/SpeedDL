@@ -16,7 +16,6 @@ const resultsSection = document.getElementById('results');
 const resultContent = document.getElementById('resultContent');
 const homeContent = document.getElementById('homeContent');
 
-// THEME TOGGLE
 (function initTheme() {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
@@ -37,7 +36,6 @@ if (themeToggle) {
   });
 }
 
-// URL PARAM HANDLING (?tab=video)
 (function handleTabParameter() {
   const params = new URLSearchParams(window.location.search);
   const tab = params.get('tab');
@@ -76,7 +74,6 @@ if (themeToggle) {
   }, 300);
 })();
 
-// PASTE BUTTON
 if (pasteBtn) {
   pasteBtn.addEventListener('click', async () => {
     try {
@@ -91,7 +88,6 @@ if (pasteBtn) {
   });
 }
 
-// CLEAR BUTTON
 if (clearBtn) {
   clearBtn.addEventListener('click', () => {
     urlInput.value = '';
@@ -102,7 +98,6 @@ if (clearBtn) {
   });
 }
 
-// DOWNLOAD HANDLER
 if (downloadBtn) {
   downloadBtn.addEventListener('click', handleDownload);
   urlInput.addEventListener('keypress', e => {
@@ -144,7 +139,6 @@ async function handleDownload() {
   }
 }
 
-// STATE: LOADING
 function showLoading() {
   if (homeContent) homeContent.classList.add('hidden');
   if (resultsSection) resultsSection.classList.add('hidden');
@@ -174,36 +168,64 @@ function showLoading() {
   }, 100);
 }
 
-// STATE: RESULT (With Real Video Player + Sound Controls)
+// SMART RESULT RENDERER
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
   const medias = data.medias || [];
   let html = '';
 
-  medias.forEach((media, index) => {
-    const isVideo = media.type === 'video';
-    const downloadUrl = media.url;
-    const quality = media.quality || 'Original';
+  // Check karo kya ye Highlights hain
+  const isHighlights = medias.some(m => m.quality && m.quality.startsWith('Highlight:'));
 
-    // Real video player with sound controls for videos
-    const mediaElement = isVideo
-      ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; border-radius:12px; background:#000; max-height:450px;"></video>`
-      : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; border-radius:12px; object-fit:cover; max-height:450px;">`;
-
+  if (isHighlights) {
+    // FastDL Style Circular Highlights Tray
     html += `
-      <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}">
-        ${mediaElement}
-        <div class="result-actions" style="margin-top: 12px;">
-          <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center;">
-            Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
-          </a>
-        </div>
-        ${data.title ? `<div class="result-caption" style="margin-top: 8px; font-weight:600;">${escapeHtml(data.title)}</div>` : ''}
-        ${data.username ? `<div class="result-caption" style="color:#0284c7;">@${escapeHtml(data.username)}</div>` : ''}
+      <div style="text-align:center; margin-bottom:16px;">
+        <h3 style="font-size:1.1rem; color:var(--text); margin-bottom:4px;">${escapeHtml(data.title || '')}</h3>
+        <p style="font-size:0.85rem; color:#0284c7; font-weight:600;">@${escapeHtml(data.username || '')}</p>
       </div>
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; max-width:400px; margin:0 auto 20px;">
     `;
-  });
+
+    medias.forEach((media, idx) => {
+      const title = media.quality.replace('Highlight:', '').trim();
+      html += `
+        <div style="background:var(--card-bg, #1e293b); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:10px 4px; text-align:center;">
+          <img src="${media.thumbnail}" alt="Cover" style="width:65px; height:65px; border-radius:50%; object-fit:cover; border:2px solid #0284c7; margin-bottom:6px; display:inline-block;">
+          <p style="font-size:0.75rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px; color:var(--text);">${escapeHtml(title)}</p>
+          <a href="${media.url}" download class="result-download-btn" style="padding:4px 8px; font-size:0.68rem; border-radius:6px; display:inline-block;">Download</a>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+
+  } else {
+    // Standard Reels / Photos / Videos / Carousel Cards
+    medias.forEach((media, index) => {
+      const isVideo = media.type === 'video';
+      const downloadUrl = media.url;
+      const quality = media.quality || 'Original';
+
+      const mediaElement = isVideo
+        ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; border-radius:12px; background:#000; max-height:450px;"></video>`
+        : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; border-radius:12px; object-fit:cover; max-height:450px;">`;
+
+      html += `
+        <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}">
+          ${mediaElement}
+          <div class="result-actions" style="margin-top: 12px;">
+            <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center;">
+              Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
+            </a>
+          </div>
+          ${data.title ? `<div class="result-caption" style="margin-top: 8px; font-weight:600;">${escapeHtml(data.title)}</div>` : ''}
+          ${data.username ? `<div class="result-caption" style="color:#0284c7;">@${escapeHtml(data.username)}</div>` : ''}
+        </div>
+      `;
+    });
+  }
 
   if (resultContent) resultContent.innerHTML = html;
   if (resultsSection) resultsSection.classList.remove('hidden');
@@ -217,7 +239,6 @@ function showResult(data) {
   }, 100);
 }
 
-// STATE: ERROR
 function showError(message) {
   if (loadingSection) loadingSection.classList.add('hidden');
   if (homeContent) homeContent.classList.remove('hidden');
