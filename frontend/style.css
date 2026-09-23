@@ -1127,148 +1127,206 @@ footer {
 .no-scroll { overflow: hidden; }
 
 /* ============================================
-   ANIMATED STATS SECTION
+   HORIZONTAL STATS ROW (Single Line)
    ============================================ */
 
-.stats-animated-section {
-  position: relative;
-  overflow: hidden;
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 0;
 }
 
-/* Floating Brand Logos */
-.floating-logos {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.float-icon {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  opacity: 0.15;
-  animation: floatAround 8s ease-in-out infinite;
-}
-
-.float-1 { top: 15%; left: 5%; animation-delay: 0s; }
-.float-2 { top: 70%; left: 8%; animation-delay: 1s; }
-.float-3 { top: 20%; right: 6%; animation-delay: 2s; }
-.float-4 { top: 75%; right: 5%; animation-delay: 3s; }
-.float-5 { top: 45%; left: 3%; animation-delay: 4s; }
-
-@keyframes floatAround {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-15px) rotate(5deg); }
-  50% { transform: translateY(-8px) rotate(-3deg); }
-  75% { transform: translateY(-20px) rotate(4deg); }
-}
-
-/* Stats Grid */
-.stats-animated-section .stats-grid {
-  position: relative;
-  z-index: 1;
-}
-
-.stats-animated-section .stat-item {
+.stats-row .stat-item {
+  text-align: center;
+  min-width: 140px;
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(20px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.stats-animated-section .stat-item.visible {
+.stats-row .stat-item.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.stats-animated-section .stat-number {
-  font-size: 36px;
+.stats-row .stat-number {
+  font-size: 38px;
   font-weight: 800;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   background: var(--grad);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1.1;
+}
+
+.stats-row .stat-item p {
+  color: var(--gray);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stats-row .stat-divider {
+  width: 1px;
+  height: 50px;
+  background: var(--border);
 }
 
 /* ============================================
-   ANIMATED TESTIMONIALS
+   SWIPEABLE REVIEWS SLIDER
    ============================================ */
 
-.testimonials-animated-section {
-  position: relative;
+.reviews-section {
   overflow: hidden;
 }
 
-.testimonial-card.slide-in {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
-              transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+.reviews-slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 10px 4px 30px;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.testimonial-card.slide-in.visible {
-  opacity: 1;
-  transform: translateY(0);
+.reviews-slider::-webkit-scrollbar {
+  display: none;
 }
 
-/* Enhanced Avatars */
-.testimonial-avatar {
-  position: relative;
+.review-card {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--p);
+  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.12);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.review-dp {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 18px;
-  color: #fff;
-  flex-shrink: 0;
+  object-fit: cover;
+  border: 3px solid transparent;
   background: var(--grad);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-clip: padding-box;
+  position: relative;
+  box-shadow: 0 0 0 3px transparent;
+  transition: transform 0.3s ease;
 }
 
-.testimonial-card:hover .testimonial-avatar {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+.review-dp::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: var(--grad);
+  z-index: -1;
 }
 
-.avatar-1 { background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%); }
-.avatar-2 { background: linear-gradient(135deg, #EF4444 0%, #F59E0B 100%); }
-.avatar-3 { background: linear-gradient(135deg, #F97316 0%, #DC2626 100%); }
+.review-card:hover .review-dp {
+  transform: scale(1.08);
+}
 
-/* Review stars glow */
-.testimonial-stars {
+.review-user h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: var(--text);
+}
+
+.review-user p {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.review-text {
+  color: var(--gray);
+  font-size: 14.5px;
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.review-stars {
   color: #FBBF24;
-  font-size: 18px;
+  font-size: 17px;
   letter-spacing: 3px;
-  display: inline-block;
-  animation: starGlow 2s ease-in-out infinite;
 }
 
-@keyframes starGlow {
-  0%, 100% { text-shadow: 0 0 5px rgba(251, 191, 36, 0.3); }
-  50% { text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
+/* Slider Dots */
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
 }
 
-/* Card hover lift */
-.testimonial-card:hover {
-  transform: translateY(-6px) !important;
-  border-color: var(--p) !important;
-  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.15);
+.slider-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s ease;
 }
 
-/* Mobile adjustments */
+.slider-dots .dot.active {
+  background: var(--p);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-  .float-icon {
-    width: 28px;
-    height: 28px;
-    opacity: 0.1;
+  .stats-row {
+    gap: 12px;
   }
-  .stats-animated-section .stat-number {
-    font-size: 28px;
+
+  .stats-row .stat-item {
+    min-width: 45%;
+    flex: 0 0 45%;
+  }
+
+  .stats-row .stat-number {
+    font-size: 30px;
+  }
+
+  .stats-row .stat-item p {
+    font-size: 12px;
+  }
+
+  .stats-row .stat-divider {
+    display: none;
+  }
+
+  .review-card {
+    flex: 0 0 280px;
+    padding: 20px;
+  }
+
+  .review-dp {
+    width: 48px;
+    height: 48px;
   }
 }
