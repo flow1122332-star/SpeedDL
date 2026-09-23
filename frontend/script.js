@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - COMPLETE JAVASCRIPT (WITH POPUP TOAST)
+   SPEEDDL - COMPLETE JAVASCRIPT (CHROME NATIVE DOWNLOAD)
    ============================================ */
 
 const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
@@ -16,41 +16,9 @@ const resultsSection = document.getElementById('results');
 const resultContent = document.getElementById('resultContent');
 const homeContent = document.getElementById('homeContent');
 
-// Floating Popup Toast Notification Function
-function showDownloadToast(text = '✅ Download Started! Check your notification bar.') {
-  let toast = document.getElementById('speeddl-toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'speeddl-toast';
-    toast.style.cssText = `
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #10b981;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 30px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      opacity: 0;
-    `;
-    document.body.appendChild(toast);
-  }
-  toast.innerHTML = text;
-  toast.style.opacity = '1';
-  toast.style.bottom = '30px';
-
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.bottom = '20px';
-  }, 3500);
+// Chrome Native Download Trigger
+function startChromeDownload(url) {
+  window.location.href = url;
 }
 
 (function initTheme() {
@@ -205,7 +173,6 @@ function showLoading() {
   }, 100);
 }
 
-// RESULT RENDERER (WITH DOWNLOAD POPUP TOAST)
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -264,9 +231,9 @@ function showResult(data) {
           </div>
           <div style="padding:10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
             <div style="font-size:0.82rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</div>
-            <a href="${downloadUrl}" download onclick="showDownloadToast('✅ Download Started! Check your notifications.')" class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
+            <button onclick="startChromeDownload('${downloadUrl}')" class="result-download-btn" style="background:#0284c7; color:white; padding:10px; border-radius:8px; font-size:0.85rem; font-weight:700; text-align:center; border:none; cursor:pointer; width:100%;">
               Download
-            </a>
+            </button>
           </div>
         </div>
       `;
@@ -288,9 +255,9 @@ function showResult(data) {
         <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
           ${mediaElement}
           <div class="result-actions" style="margin-top: 14px;">
-            <a href="${downloadUrl}" download onclick="showDownloadToast('✅ Download Started! File is saving to your phone...')" class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
+            <button onclick="startChromeDownload('${downloadUrl}')" class="result-download-btn" style="display:block; width:100%; text-align:center; background:#0284c7; color:white; padding:14px; border-radius:10px; font-weight:700; border:none; font-size:1rem; cursor:pointer;">
               Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
-            </a>
+            </button>
           </div>
           ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.88rem; text-align:center;">${escapeHtml(data.title)}</div>` : ''}
           ${data.username ? `<div class="result-caption" style="color:#0284c7; font-size:0.85rem; text-align:center;">@${escapeHtml(data.username)}</div>` : ''}
