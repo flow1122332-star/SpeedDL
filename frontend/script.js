@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - COMPLETE JAVASCRIPT (DIRECT DOWNLOAD)
+   SPEEDDL - COMPLETE JAVASCRIPT (WITH POPUP TOAST)
    ============================================ */
 
 const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
@@ -15,6 +15,43 @@ const loadingText = document.getElementById('loadingText');
 const resultsSection = document.getElementById('results');
 const resultContent = document.getElementById('resultContent');
 const homeContent = document.getElementById('homeContent');
+
+// Floating Popup Toast Notification Function
+function showDownloadToast(text = '✅ Download Started! Check your notification bar.') {
+  let toast = document.getElementById('speeddl-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'speeddl-toast';
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      opacity: 0;
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = text;
+  toast.style.opacity = '1';
+  toast.style.bottom = '30px';
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.bottom = '20px';
+  }, 3500);
+}
 
 (function initTheme() {
   const savedTheme = localStorage.getItem('theme');
@@ -168,7 +205,7 @@ function showLoading() {
   }, 100);
 }
 
-// RESULT RENDERER (NO TARGET="_BLANK" / DIRECT NOTIFICATION BAR DOWNLOAD)
+// RESULT RENDERER (WITH DOWNLOAD POPUP TOAST)
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -178,10 +215,8 @@ function showResult(data) {
   const isProfileMode = Boolean(data.username);
 
   if (isProfileMode) {
-    // 1. Search result Heading
     html += `<div style="text-align:center; font-size:1.05rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>`;
 
-    // 2. Profile Header (Left: Avatar, Right: Username & Name)
     const avatarUrl = data.avatar || (medias.find(m => m.thumbnail)?.thumbnail) || '';
     const fullName = data.fullName || (data.title ? data.title.split('•')[0].trim() : data.username);
 
@@ -201,7 +236,6 @@ function showResult(data) {
       </div>
     `;
 
-    // 3. Sub Tabs
     html += `
       <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); max-width:520px; margin:0 auto 18px;">
         <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">POSTS</div>
@@ -211,7 +245,6 @@ function showResult(data) {
       </div>
     `;
 
-    // 4. 2-Column Cards Grid
     html += `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; max-width:520px; margin:0 auto 30px;">`;
 
     medias.forEach((media, idx) => {
@@ -231,7 +264,7 @@ function showResult(data) {
           </div>
           <div style="padding:10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
             <div style="font-size:0.82rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</div>
-            <a href="${downloadUrl}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
+            <a href="${downloadUrl}" download onclick="showDownloadToast('✅ Download Started! Check your notifications.')" class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
               Download
             </a>
           </div>
@@ -242,7 +275,6 @@ function showResult(data) {
     html += `</div>`;
 
   } else {
-    // Single Reel, Video, Photo (Direct in-page download)
     medias.forEach((media, index) => {
       const isVideo = media.type === 'video';
       const downloadUrl = media.url;
@@ -256,7 +288,7 @@ function showResult(data) {
         <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
           ${mediaElement}
           <div class="result-actions" style="margin-top: 14px;">
-            <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
+            <a href="${downloadUrl}" download onclick="showDownloadToast('✅ Download Started! File is saving to your phone...')" class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
               Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
             </a>
           </div>
