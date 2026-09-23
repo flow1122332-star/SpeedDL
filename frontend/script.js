@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - COMPLETE JAVASCRIPT (CHROME NATIVE DOWNLOAD)
+   SPEEDDL - COMPLETE JAVASCRIPT (FASTDL INTERACTIVE)
    ============================================ */
 
 const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
@@ -16,10 +16,7 @@ const resultsSection = document.getElementById('results');
 const resultContent = document.getElementById('resultContent');
 const homeContent = document.getElementById('homeContent');
 
-// Chrome Native Download Trigger
-function startChromeDownload(url) {
-  window.location.href = url;
-}
+let globalProfileData = null;
 
 (function initTheme() {
   const savedTheme = localStorage.getItem('theme');
@@ -133,7 +130,7 @@ async function handleDownload() {
       throw new Error(data.detail || 'Failed to fetch media');
     }
 
-    if (!data.medias || data.medias.length === 0) {
+    if (!data.medias && !data.isProfile) {
       throw new Error('No media found');
     }
 
@@ -173,102 +170,18 @@ function showLoading() {
   }, 100);
 }
 
+// FASTDL PROFILE RENDERER WITH INTERACTIVE TABS
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
-  const medias = data.medias || [];
-  let html = '';
-
-  const isProfileMode = Boolean(data.username);
-
-  if (isProfileMode) {
-    html += `<div style="text-align:center; font-size:1.05rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>`;
-
-    const avatarUrl = data.avatar || (medias.find(m => m.thumbnail)?.thumbnail) || '';
-    const fullName = data.fullName || (data.title ? data.title.split('•')[0].trim() : data.username);
-
-    html += `
-      <div style="display:flex; align-items:center; justify-content:center; gap:20px; max-width:440px; margin:0 auto 20px;">
-        <div style="position:relative; width:84px; height:84px; flex-shrink:0;">
-          <img src="${avatarUrl}" alt="Avatar" style="width:84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block;">
-          <div style="position:absolute; bottom:2px; right:2px; background:#0284c7; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">⛶</div>
-        </div>
-        <div style="text-align:left;">
-          <div style="font-size:1.15rem; font-weight:700; color:var(--text, #0f172a); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-            <span>@${escapeHtml(data.username)}</span>
-            <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
-          </div>
-          <div style="font-size:0.92rem; font-weight:600; color:#64748b;">${escapeHtml(fullName)}</div>
-        </div>
-      </div>
-    `;
-
-    html += `
-      <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); max-width:520px; margin:0 auto 18px;">
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">POSTS</div>
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">STORIES</div>
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase;">HIGHLIGHTS</div>
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">REELS</div>
-      </div>
-    `;
-
-    html += `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; max-width:520px; margin:0 auto 30px;">`;
-
-    medias.forEach((media, idx) => {
-      const isVideo = media.type === 'video';
-      const downloadUrl = media.url;
-      const previewImg = media.thumbnail || downloadUrl;
-      const title = media.quality ? media.quality.replace('Highlight:', '').trim() : `Item ${idx + 1}`;
-
-      html += `
-        <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; aspect-ratio:4/5; background:#000;">
-            <img src="${previewImg}" alt="Preview" style="width:100%; height:100%; object-fit:contain; background:#0b0f19; display:block;">
-            <div style="position:absolute; top:8px; right:8px; display:flex; gap:6px; color:white; font-size:0.85rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">
-              ${isVideo ? '<span>▶</span>' : ''}
-              <span>⛶</span>
-            </div>
-          </div>
-          <div style="padding:10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
-            <div style="font-size:0.82rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</div>
-            <button onclick="startChromeDownload('${downloadUrl}')" class="result-download-btn" style="background:#0284c7; color:white; padding:10px; border-radius:8px; font-size:0.85rem; font-weight:700; text-align:center; border:none; cursor:pointer; width:100%;">
-              Download
-            </button>
-          </div>
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-
+  if (data.isProfile) {
+    globalProfileData = data;
+    renderProfileView(data);
   } else {
-    medias.forEach((media, index) => {
-      const isVideo = media.type === 'video';
-      const downloadUrl = media.url;
-      const quality = media.quality || 'HD Video';
-
-      const mediaElement = isVideo
-        ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
-        : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
-
-      html += `
-        <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
-          ${mediaElement}
-          <div class="result-actions" style="margin-top: 14px;">
-            <button onclick="startChromeDownload('${downloadUrl}')" class="result-download-btn" style="display:block; width:100%; text-align:center; background:#0284c7; color:white; padding:14px; border-radius:10px; font-weight:700; border:none; font-size:1rem; cursor:pointer;">
-              Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
-            </button>
-          </div>
-          ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.88rem; text-align:center;">${escapeHtml(data.title)}</div>` : ''}
-          ${data.username ? `<div class="result-caption" style="color:#0284c7; font-size:0.85rem; text-align:center;">@${escapeHtml(data.username)}</div>` : ''}
-        </div>
-      `;
-    });
+    renderMediaView(data);
   }
 
-  if (resultContent) resultContent.innerHTML = html;
   if (resultsSection) resultsSection.classList.remove('hidden');
-
   downloadBtn.disabled = false;
 
   setTimeout(() => {
@@ -276,6 +189,194 @@ function showResult(data) {
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, 100);
+}
+
+function renderProfileView(data) {
+  let html = `
+    <div style="max-width:540px; margin:0 auto 20px;">
+      <!-- Profile Header -->
+      <div style="display:flex; align-items:flex-start; gap:18px; margin-bottom:14px; text-align:left;">
+        <div style="position:relative; width:82px; height:82px; flex-shrink:0;">
+          <img src="${data.avatar}" alt="Avatar" style="width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block; background:#1e293b;">
+          <div style="position:absolute; bottom:0; right:0; background:#0284c7; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">⛶</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:1.1rem; font-weight:700; color:var(--text, #0f172a); margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+            <span>@${escapeHtml(data.username)}</span>
+            <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
+          </div>
+          <!-- Stats Row -->
+          <div style="display:flex; gap:18px; margin-bottom:8px; font-size:0.85rem; color:#64748b;">
+            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.postsCount || '0')}</b> posts</div>
+            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.followers || '0')}</b> followers</div>
+            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.following || '0')}</b> following</div>
+          </div>
+          <div style="font-size:0.92rem; font-weight:700; color:var(--text, #0f172a); margin-bottom:4px;">${escapeHtml(data.fullName || '')}</div>
+          ${data.bio ? `<div style="font-size:0.8rem; color:#475569; white-space:pre-wrap; line-height:1.4;">${escapeHtml(data.bio)}</div>` : ''}
+        </div>
+      </div>
+
+      <!-- 4 Interactive Tabs -->
+      <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); margin:18px 0 16px;">
+        <div id="tabBtnStories" onclick="switchActiveTab('stories')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">STORIES (${(data.stories || []).length})</div>
+        <div id="tabBtnHighlights" onclick="switchActiveTab('highlights')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">HIGHLIGHTS (${(data.highlights || []).length})</div>
+        <div id="tabBtnPosts" onclick="switchActiveTab('posts')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">POSTS</div>
+        <div id="tabBtnReels" onclick="switchActiveTab('reels')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">REELS</div>
+      </div>
+
+      <!-- Dynamic Content Area -->
+      <div id="profileTabContent"></div>
+    </div>
+  `;
+
+  if (resultContent) resultContent.innerHTML = html;
+  // Default: Agar stories hain toh stories, nahi toh highlights open karo
+  switchActiveTab((data.stories && data.stories.length > 0) ? 'stories' : 'highlights');
+}
+
+window.switchActiveTab = function(tab) {
+  const data = globalProfileData;
+  if (!data) return;
+
+  ['stories', 'highlights', 'posts', 'reels'].forEach(t => {
+    const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (btn) {
+      if (t === tab) {
+        btn.style.color = '#0284c7';
+        btn.style.borderBottom = '2px solid #0284c7';
+      } else {
+        btn.style.color = '#64748b';
+        btn.style.borderBottom = 'none';
+      }
+    }
+  });
+
+  const content = document.getElementById('profileTabContent');
+  if (!content) return;
+
+  // 1. STORIES
+  if (tab === 'stories') {
+    const stories = data.stories || [];
+    if (stories.length === 0) {
+      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">User ne pichhle 24 ghante mein koi active story nahi lagayi hai.</p>`;
+      return;
+    }
+    let sHtml = `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">`;
+    stories.forEach((s, idx) => {
+      sHtml += `
+        <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
+          <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
+            <img src="${s.thumbnail || s.url}" alt="Story" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${s.type === 'video' ? '▶' : '⛶'}</div>
+          </div>
+          <div style="padding:8px;">
+            <a href="${s.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Story</a>
+          </div>
+        </div>
+      `;
+    });
+    sHtml += `</div>`;
+    content.innerHTML = sHtml;
+
+  // 2. HIGHLIGHTS TRAY (Folders that open inside!)
+  } else if (tab === 'highlights') {
+    const hls = data.highlights || [];
+    if (hls.length === 0) {
+      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">Koi highlights nahi mile.</p>`;
+      return;
+    }
+    let hHtml = `
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; text-align:center;">
+    `;
+    hls.forEach(h => {
+      hHtml += `
+        <div onclick="openHighlightAlbum('${h.id}', '${escapeHtml(h.title)}')" style="background:var(--card-bg, #ffffff); border:1px solid rgba(0,0,0,0.08); border-radius:12px; padding:10px 4px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:0.2s;">
+          <img src="${h.cover}" alt="HL" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid #0284c7; margin-bottom:6px; display:inline-block; background:#f1f5f9;">
+          <div style="font-size:0.75rem; font-weight:600; color:var(--text, #0f172a); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px;">${escapeHtml(h.title)}</div>
+          <span style="font-size:0.68rem; color:#0284c7; font-weight:700;">Open Folder ➔</span>
+        </div>
+      `;
+    });
+    hHtml += `</div><div id="albumViewer" style="margin-top:20px;"></div>`;
+    content.innerHTML = hHtml;
+
+  // 3. POSTS / REELS
+  } else {
+    content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">Direct download karne ke liye upar 'Reels' ya 'Photo' tab mein post ka link paste karein.</p>`;
+  }
+};
+
+window.openHighlightAlbum = async function(id, title) {
+  const viewer = document.getElementById('albumViewer');
+  if (!viewer) return;
+
+  viewer.innerHTML = `<p style="color:#0284c7; font-size:0.85rem; padding:14px 0; text-align:center;">Loading "${title}" items...</p>`;
+  viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  try {
+    const res = await fetch(`${API_URL}/api/highlight/${id}`);
+    const json = await res.json();
+    if (!json.success || !json.items || json.items.length === 0) {
+      throw new Error('Is highlight ke items nahi mile');
+    }
+
+    let aHtml = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 4px;">
+        <span style="font-size:0.9rem; font-weight:700; color:var(--text, #0f172a);">${title} (${json.items.length} items)</span>
+        <button onclick="document.getElementById('albumViewer').innerHTML=''" style="background:#e2e8f0; border:none; border-radius:6px; padding:4px 8px; font-size:0.75rem; cursor:pointer; font-weight:600;">✕ Close</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
+    `;
+
+    json.items.forEach((item, idx) => {
+      aHtml += `
+        <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
+          <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
+            <img src="${item.thumbnail || item.url}" alt="Item" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${item.type === 'video' ? '▶' : '⛶'}</div>
+          </div>
+          <div style="padding:8px;">
+            <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Item ${idx + 1}</a>
+          </div>
+        </div>
+      `;
+    });
+    aHtml += `</div>`;
+    viewer.innerHTML = aHtml;
+
+  } catch (err) {
+    viewer.innerHTML = `<p style="color:#ef4444; font-size:0.85rem; text-align:center;">Error: ${err.message}</p>`;
+  }
+};
+
+function renderMediaView(data) {
+  const medias = data.medias || [];
+  let html = '';
+
+  medias.forEach((media, index) => {
+    const isVideo = media.type === 'video';
+    const downloadUrl = media.url;
+    const quality = media.quality || 'HD Video';
+
+    const mediaElement = isVideo
+      ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
+      : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
+
+    html += `
+      <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
+        ${mediaElement}
+        <div class="result-actions" style="margin-top: 14px;">
+          <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
+            Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
+          </a>
+        </div>
+        ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.88rem; text-align:center;">${escapeHtml(data.title)}</div>` : ''}
+        ${data.username ? `<div class="result-caption" style="color:#0284c7; font-size:0.85rem; text-align:center;">@${escapeHtml(data.username)}</div>` : ''}
+      </div>
+    `;
+  });
+
+  if (resultContent) resultContent.innerHTML = html;
 }
 
 function showError(message) {
