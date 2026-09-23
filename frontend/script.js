@@ -5,7 +5,7 @@
 // ============================================
 // CONFIGURATION
 // ============================================
-const API_URL = 'http://YOUR_BACKEND_URL'; // Change this when backend is deployed
+const API_URL = 'https://scrapenest-backend.onrender.com';
 
 
 // ============================================
