@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - COMPLETE JAVASCRIPT (INSTAGRAM RATIO)
+   SPEEDDL - COMPLETE JAVASCRIPT (DIRECT DOWNLOAD)
    ============================================ */
 
 const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
@@ -168,7 +168,7 @@ function showLoading() {
   }, 100);
 }
 
-// REAL INSTAGRAM ASPECT RATIO RENDERER
+// RESULT RENDERER (NO TARGET="_BLANK" / DIRECT NOTIFICATION BAR DOWNLOAD)
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -178,10 +178,10 @@ function showResult(data) {
   const isProfileMode = Boolean(data.username);
 
   if (isProfileMode) {
-    // 1. Search result Title
+    // 1. Search result Heading
     html += `<div style="text-align:center; font-size:1.05rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>`;
 
-    // 2. Profile Header
+    // 2. Profile Header (Left: Avatar, Right: Username & Name)
     const avatarUrl = data.avatar || (medias.find(m => m.thumbnail)?.thumbnail) || '';
     const fullName = data.fullName || (data.title ? data.title.split('•')[0].trim() : data.username);
 
@@ -211,7 +211,7 @@ function showResult(data) {
       </div>
     `;
 
-    // 4. 2-Column Cards Grid (Instagram Aspect Ratio)
+    // 4. 2-Column Cards Grid
     html += `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; max-width:520px; margin:0 auto 30px;">`;
 
     medias.forEach((media, idx) => {
@@ -231,7 +231,7 @@ function showResult(data) {
           </div>
           <div style="padding:10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
             <div style="font-size:0.82rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</div>
-            <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
+            <a href="${downloadUrl}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
               Download
             </a>
           </div>
@@ -242,13 +242,12 @@ function showResult(data) {
     html += `</div>`;
 
   } else {
-    // Single Reel, Video, Photo (Instagram Real 9:16 / Natural Ratio)
+    // Single Reel, Video, Photo (Direct in-page download)
     medias.forEach((media, index) => {
       const isVideo = media.type === 'video';
       const downloadUrl = media.url;
       const quality = media.quality || 'HD Video';
 
-      // 9:16 Aspect ratio for reels/video, Natural for photos
       const mediaElement = isVideo
         ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
         : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
@@ -257,7 +256,7 @@ function showResult(data) {
         <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
           ${mediaElement}
           <div class="result-actions" style="margin-top: 14px;">
-            <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
+            <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
               Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
             </a>
           </div>
