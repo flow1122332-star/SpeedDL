@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - COMPLETE JAVASCRIPT (FASTDL UI)
+   SPEEDDL - COMPLETE JAVASCRIPT (INSTAGRAM RATIO)
    ============================================ */
 
 const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
@@ -168,7 +168,7 @@ function showLoading() {
   }, 100);
 }
 
-// EXACT FASTDL UI RENDERER
+// REAL INSTAGRAM ASPECT RATIO RENDERER
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -178,41 +178,41 @@ function showResult(data) {
   const isProfileMode = Boolean(data.username);
 
   if (isProfileMode) {
-    // 1. "Search result" Heading
-    html += `<div style="text-align:center; font-size:1.05rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:20px;">Search result</div>`;
+    // 1. Search result Title
+    html += `<div style="text-align:center; font-size:1.05rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>`;
 
-    // 2. Profile Header (Left: Avatar with blue badge, Right: Username & Name)
+    // 2. Profile Header
     const avatarUrl = data.avatar || (medias.find(m => m.thumbnail)?.thumbnail) || '';
     const fullName = data.fullName || (data.title ? data.title.split('•')[0].trim() : data.username);
 
     html += `
-      <div style="display:flex; align-items:center; justify-content:center; gap:20px; max-width:440px; margin:0 auto 24px;">
-        <div style="position:relative; width:88px; height:88px; flex-shrink:0;">
-          <img src="${avatarUrl}" alt="Avatar" style="width:88px; height:88px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block;">
-          <div style="position:absolute; bottom:2px; right:2px; background:#0284c7; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">⛶</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:20px; max-width:440px; margin:0 auto 20px;">
+        <div style="position:relative; width:84px; height:84px; flex-shrink:0;">
+          <img src="${avatarUrl}" alt="Avatar" style="width:84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block;">
+          <div style="position:absolute; bottom:2px; right:2px; background:#0284c7; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">⛶</div>
         </div>
         <div style="text-align:left;">
           <div style="font-size:1.15rem; font-weight:700; color:var(--text, #0f172a); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
             <span>@${escapeHtml(data.username)}</span>
             <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
           </div>
-          <div style="font-size:0.95rem; font-weight:600; color:#64748b;">${escapeHtml(fullName)}</div>
+          <div style="font-size:0.92rem; font-weight:600; color:#64748b;">${escapeHtml(fullName)}</div>
         </div>
       </div>
     `;
 
-    // 3. FastDL 4 Sub-Tabs (POSTS, STORIES, HIGHLIGHTS, REELS)
+    // 3. Sub Tabs
     html += `
-      <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); max-width:540px; margin:0 auto 20px;">
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.8rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">POSTS</div>
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.8rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">STORIES</div>
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.8rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">HIGHLIGHTS</div>
-        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.8rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">REELS</div>
+      <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); max-width:520px; margin:0 auto 18px;">
+        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">POSTS</div>
+        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">STORIES</div>
+        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase;">HIGHLIGHTS</div>
+        <div style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase;">REELS</div>
       </div>
     `;
 
-    // 4. FastDL 2-Column Cards Grid
-    html += `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; max-width:540px; margin:0 auto 30px;">`;
+    // 4. 2-Column Cards Grid (Instagram Aspect Ratio)
+    html += `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; max-width:520px; margin:0 auto 30px;">`;
 
     medias.forEach((media, idx) => {
       const isVideo = media.type === 'video';
@@ -221,9 +221,9 @@ function showResult(data) {
       const title = media.quality ? media.quality.replace('Highlight:', '').trim() : `Item ${idx + 1}`;
 
       html += `
-        <div style="background:var(--card-bg, #ffffff); border-radius:14px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; aspect-ratio:1/1; background:#000;">
-            <img src="${previewImg}" alt="Preview" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
+          <div style="position:relative; width:100%; aspect-ratio:4/5; background:#000;">
+            <img src="${previewImg}" alt="Preview" style="width:100%; height:100%; object-fit:contain; background:#0b0f19; display:block;">
             <div style="position:absolute; top:8px; right:8px; display:flex; gap:6px; color:white; font-size:0.85rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">
               ${isVideo ? '<span>▶</span>' : ''}
               <span>⛶</span>
@@ -231,7 +231,7 @@ function showResult(data) {
           </div>
           <div style="padding:10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
             <div style="font-size:0.82rem; font-weight:600; color:var(--text, #1e293b); margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</div>
-            <a href="${downloadUrl}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
+            <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="result-download-btn" style="background:#0284c7; color:white; padding:8px; border-radius:8px; font-size:0.82rem; font-weight:700; text-align:center; text-decoration:none; display:block;">
               Download
             </a>
           </div>
@@ -242,26 +242,27 @@ function showResult(data) {
     html += `</div>`;
 
   } else {
-    // Normal Reels / Photo / Video Cards
+    // Single Reel, Video, Photo (Instagram Real 9:16 / Natural Ratio)
     medias.forEach((media, index) => {
       const isVideo = media.type === 'video';
       const downloadUrl = media.url;
-      const quality = media.quality || 'Original';
+      const quality = media.quality || 'HD Video';
 
+      // 9:16 Aspect ratio for reels/video, Natural for photos
       const mediaElement = isVideo
-        ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; border-radius:14px; background:#000; max-height:450px;"></video>`
-        : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; border-radius:14px; object-fit:cover; max-height:450px;">`;
+        ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
+        : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
 
       html += `
-        <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:500px; margin-left:auto; margin-right:auto;">
+        <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
           ${mediaElement}
-          <div class="result-actions" style="margin-top: 12px;">
-            <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none;">
+          <div class="result-actions" style="margin-top: 14px;">
+            <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
               Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
             </a>
           </div>
-          ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.9rem;">${escapeHtml(data.title)}</div>` : ''}
-          ${data.username ? `<div class="result-caption" style="color:#0284c7; font-size:0.85rem;">@${escapeHtml(data.username)}</div>` : ''}
+          ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.88rem; text-align:center;">${escapeHtml(data.title)}</div>` : ''}
+          ${data.username ? `<div class="result-caption" style="color:#0284c7; font-size:0.85rem; text-align:center;">@${escapeHtml(data.username)}</div>` : ''}
         </div>
       `;
     });
