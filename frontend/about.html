@@ -6,7 +6,7 @@
 <title>About SpeedDL - Free Instagram Downloader</title>
 <meta name="description" content="Learn about SpeedDL - the free, fast and secure Instagram downloader trusted by millions worldwide.">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#7E17FF">
+<meta name="theme-color" content="#F59E0B">
 
 <link rel="preload" href="assets/icons/favicon.png" as="image">
 <link rel="preload" href="assets/icons/logo.png" as="image">
@@ -17,9 +17,16 @@
 <meta property="og:url" content="https://speeddl.pages.dev/about.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SpeedDL">
+<meta property="og:locale" content="en">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About SpeedDL">
+<meta name="twitter:description" content="The free, fast and secure Instagram downloader.">
+<meta name="twitter:image" content="https://speeddl.pages.dev/assets/icons/og-image.jpg">
 
 <link rel="canonical" href="https://speeddl.pages.dev/about.html">
 <link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon-32x32.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 <link rel="stylesheet" href="style.css">
@@ -54,27 +61,39 @@
 
 <div id="homeContent">
 
-  <!-- STATS GRID -->
-  <section class="section">
+  <!-- ===== ANIMATED STATS + FLOATING LOGOS ===== -->
+  <section class="section stats-animated-section">
     <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <h3>30M+</h3>
+
+      <!-- Floating Brand Logos -->
+      <div class="floating-logos">
+        <img src="assets/icons/instagram.png" alt="Instagram" class="float-icon float-1" loading="lazy">
+        <img src="assets/icons/facebook.png" alt="Facebook" class="float-icon float-2" loading="lazy">
+        <img src="assets/icons/youtube.png" alt="YouTube" class="float-icon float-3" loading="lazy">
+        <img src="assets/icons/twitter.png" alt="X" class="float-icon float-4" loading="lazy">
+        <img src="assets/icons/tiktok.png" alt="TikTok" class="float-icon float-5" loading="lazy">
+      </div>
+
+      <!-- Stats Grid with Count-Up -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-item" data-count="30" data-suffix="M+">
+          <h3 class="stat-number"><span class="count-up">0</span>M+</h3>
           <p>Active users worldwide</p>
         </div>
-        <div class="stat-item">
-          <h3>60M+</h3>
+        <div class="stat-item" data-count="60" data-suffix="M+">
+          <h3 class="stat-number"><span class="count-up">0</span>M+</h3>
           <p>Media files downloaded</p>
         </div>
-        <div class="stat-item">
-          <h3>1.6M+</h3>
+        <div class="stat-item" data-count="1.6" data-suffix="M+">
+          <h3 class="stat-number"><span class="count-up">0</span>M+</h3>
           <p>Public profiles viewed</p>
         </div>
-        <div class="stat-item">
-          <h3>100%</h3>
+        <div class="stat-item" data-count="100" data-suffix="%">
+          <h3 class="stat-number"><span class="count-up">0</span>%</h3>
           <p>Free to use — no login required</p>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -144,15 +163,17 @@
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
-  <section class="section">
+  <!-- ===== ANIMATED TESTIMONIALS ===== -->
+  <section class="section testimonials-animated-section">
     <div class="container">
       <h2>Over 30 Million Users Worldwide Choose SpeedDL</h2>
       <p class="section-desc">Why is SpeedDL a top choice? Hear from people who use it every day. Real feedback from creators, students, and professionals.</p>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
+
+      <div class="testimonials-grid" id="testimonialsGrid">
+
+        <div class="testimonial-card slide-in" data-delay="0">
           <div class="testimonial-header">
-            <div class="testimonial-avatar">LM</div>
+            <div class="testimonial-avatar avatar-1">LM</div>
             <div>
               <h4>Lena M.</h4>
               <p class="testimonial-role">Student</p>
@@ -161,9 +182,10 @@
           <p class="testimonial-text">"Tried so many downloaders with popups and errors — SpeedDL is clean, fast, and gets it done in seconds."</p>
           <div class="testimonial-stars">★★★★★</div>
         </div>
-        <div class="testimonial-card">
+
+        <div class="testimonial-card slide-in" data-delay="200">
           <div class="testimonial-header">
-            <div class="testimonial-avatar">MT</div>
+            <div class="testimonial-avatar avatar-2">MT</div>
             <div>
               <h4>Maria T.</h4>
               <p class="testimonial-role">Social Media Manager</p>
@@ -172,9 +194,10 @@
           <p class="testimonial-text">"Saved my day more than once. Needed a Story ASAP — SpeedDL worked instantly while others failed. Super reliable."</p>
           <div class="testimonial-stars">★★★★★</div>
         </div>
-        <div class="testimonial-card">
+
+        <div class="testimonial-card slide-in" data-delay="400">
           <div class="testimonial-header">
-            <div class="testimonial-avatar">N</div>
+            <div class="testimonial-avatar avatar-3">N</div>
             <div>
               <h4>Nina</h4>
               <p class="testimonial-role">College Student</p>
@@ -183,6 +206,7 @@
           <p class="testimonial-text">"No instructions needed. Paste link and go. SpeedDL does exactly what it promises — fast, free, and easy."</p>
           <div class="testimonial-stars">★★★★★</div>
         </div>
+
       </div>
     </div>
   </section>
@@ -295,4 +319,4 @@
 <script src="script.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
-        </html>
+                                         </html>
