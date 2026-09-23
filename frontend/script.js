@@ -415,29 +415,22 @@ function escapeHtml(text) {
 })();
 
 // ============================================
-// ABOUT SECTION ANIMATIONS
+// ABOUT PAGE ANIMATIONS
 // ============================================
 
 (function initAboutAnimations() {
-  // Count-Up Animation for Stats
-  function animateCount(el, target, duration = 2000) {
+  // Count-Up Animation
+  function animateCount(el, target, duration = 1800) {
     const isDecimal = target % 1 !== 0;
-    const start = 0;
     const startTime = performance.now();
 
     function update(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Ease-out cubic for smooth slowing
       const eased = 1 - Math.pow(1 - progress, 3);
-      const current = start + (target - start) * eased;
+      const current = target * eased;
 
-      if (isDecimal) {
-        el.textContent = current.toFixed(1);
-      } else {
-        el.textContent = Math.floor(current);
-      }
+      el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
 
       if (progress < 1) {
         requestAnimationFrame(update);
@@ -449,53 +442,44 @@ function escapeHtml(text) {
     requestAnimationFrame(update);
   }
 
-  // Intersection Observer - triggers when section is visible
-  const statsGrid = document.getElementById('statsGrid');
-  if (statsGrid) {
-    const statsObserver = new IntersectionObserver((entries) => {
+  // Stats Reveal + Count Up
+  const statsRow = document.querySelector('.stats-row');
+  if (statsRow) {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Animate each stat item
-          document.querySelectorAll('.stats-animated-section .stat-item').forEach((item, index) => {
-            setTimeout(() => {
-              item.classList.add('visible');
-            }, index * 150);
+          document.querySelectorAll('.stats-row .stat-item').forEach((item, i) => {
+            setTimeout(() => item.classList.add('visible'), i * 150);
           });
-
-          // Count up each number
-          document.querySelectorAll('.stats-animated-section .count-up').forEach((el, index) => {
-            const parent = el.closest('.stat-item');
-            const target = parseFloat(parent.dataset.count);
-            setTimeout(() => {
-              animateCount(el, target, 2000);
-            }, index * 150);
+          document.querySelectorAll('.stats-row .count-up').forEach((el, i) => {
+            const target = parseFloat(el.closest('.stat-item').dataset.count);
+            setTimeout(() => animateCount(el, target), i * 150);
           });
-
-          statsObserver.unobserve(entry.target);
+          observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.2 });
-
-    statsObserver.observe(statsGrid);
+    observer.observe(statsRow);
   }
 
-  // Testimonials Slide-In Animation
-  const testimonialsGrid = document.getElementById('testimonialsGrid');
-  if (testimonialsGrid) {
-    const testimonialObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          document.querySelectorAll('.testimonial-card.slide-in').forEach((card) => {
-            const delay = parseInt(card.dataset.delay || 0);
-            setTimeout(() => {
-              card.classList.add('visible');
-            }, delay);
-          });
-          testimonialObserver.unobserve(entry.target);
-        }
+  // Reviews Slider Dots
+  const slider = document.getElementById('reviewsSlider');
+  const dots = document.querySelectorAll('.slider-dots .dot');
+  if (slider && dots.length) {
+    slider.addEventListener('scroll', () => {
+      const cardWidth = slider.querySelector('.review-card')?.offsetWidth + 20 || 340;
+      const activeIndex = Math.round(slider.scrollLeft / cardWidth);
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === activeIndex);
       });
-    }, { threshold: 0.15 });
+    }, { passive: true });
 
-    testimonialObserver.observe(testimonialsGrid);
+    // Dot click → scroll to card
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const cardWidth = slider.querySelector('.review-card')?.offsetWidth + 20 || 340;
+        slider.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+      });
+    });
   }
 })();
