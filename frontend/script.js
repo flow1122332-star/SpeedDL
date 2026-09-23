@@ -413,3 +413,89 @@ function escapeHtml(text) {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
+
+// ============================================
+// ABOUT SECTION ANIMATIONS
+// ============================================
+
+(function initAboutAnimations() {
+  // Count-Up Animation for Stats
+  function animateCount(el, target, duration = 2000) {
+    const isDecimal = target % 1 !== 0;
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease-out cubic for smooth slowing
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = start + (target - start) * eased;
+
+      if (isDecimal) {
+        el.textContent = current.toFixed(1);
+      } else {
+        el.textContent = Math.floor(current);
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = isDecimal ? target.toFixed(1) : target;
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Intersection Observer - triggers when section is visible
+  const statsGrid = document.getElementById('statsGrid');
+  if (statsGrid) {
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Animate each stat item
+          document.querySelectorAll('.stats-animated-section .stat-item').forEach((item, index) => {
+            setTimeout(() => {
+              item.classList.add('visible');
+            }, index * 150);
+          });
+
+          // Count up each number
+          document.querySelectorAll('.stats-animated-section .count-up').forEach((el, index) => {
+            const parent = el.closest('.stat-item');
+            const target = parseFloat(parent.dataset.count);
+            setTimeout(() => {
+              animateCount(el, target, 2000);
+            }, index * 150);
+          });
+
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    statsObserver.observe(statsGrid);
+  }
+
+  // Testimonials Slide-In Animation
+  const testimonialsGrid = document.getElementById('testimonialsGrid');
+  if (testimonialsGrid) {
+    const testimonialObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.testimonial-card.slide-in').forEach((card) => {
+            const delay = parseInt(card.dataset.delay || 0);
+            setTimeout(() => {
+              card.classList.add('visible');
+            }, delay);
+          });
+          testimonialObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    testimonialObserver.observe(testimonialsGrid);
+  }
+})();
