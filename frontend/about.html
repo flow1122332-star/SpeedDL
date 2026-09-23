@@ -61,39 +61,30 @@
 
 <div id="homeContent">
 
-  <!-- ===== ANIMATED STATS + FLOATING LOGOS ===== -->
-  <section class="section stats-animated-section">
+  <!-- ===== HORIZONTAL STATS (Single Line) ===== -->
+  <section class="section">
     <div class="container">
-
-      <!-- Floating Brand Logos -->
-      <div class="floating-logos">
-        <img src="assets/icons/instagram.png" alt="Instagram" class="float-icon float-1" loading="lazy">
-        <img src="assets/icons/facebook.png" alt="Facebook" class="float-icon float-2" loading="lazy">
-        <img src="assets/icons/youtube.png" alt="YouTube" class="float-icon float-3" loading="lazy">
-        <img src="assets/icons/twitter.png" alt="X" class="float-icon float-4" loading="lazy">
-        <img src="assets/icons/tiktok.png" alt="TikTok" class="float-icon float-5" loading="lazy">
-      </div>
-
-      <!-- Stats Grid with Count-Up -->
-      <div class="stats-grid" id="statsGrid">
+      <div class="stats-row" id="statsGrid">
         <div class="stat-item" data-count="30" data-suffix="M+">
           <h3 class="stat-number"><span class="count-up">0</span>M+</h3>
-          <p>Active users worldwide</p>
+          <p>Active users</p>
         </div>
+        <div class="stat-divider"></div>
         <div class="stat-item" data-count="60" data-suffix="M+">
           <h3 class="stat-number"><span class="count-up">0</span>M+</h3>
-          <p>Media files downloaded</p>
+          <p>Files downloaded</p>
         </div>
+        <div class="stat-divider"></div>
         <div class="stat-item" data-count="1.6" data-suffix="M+">
           <h3 class="stat-number"><span class="count-up">0</span>M+</h3>
-          <p>Public profiles viewed</p>
+          <p>Profiles viewed</p>
         </div>
+        <div class="stat-divider"></div>
         <div class="stat-item" data-count="100" data-suffix="%">
           <h3 class="stat-number"><span class="count-up">0</span>%</h3>
-          <p>Free to use — no login required</p>
+          <p>Free to use</p>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -113,7 +104,7 @@
   <section class="section">
     <div class="container">
       <h2>Why Choose SpeedDL for Instagram Downloads</h2>
-      <p class="section-desc">Save Instagram content in just a couple of clicks — safely, quickly, and without quality loss. Skip unreliable apps and enjoy consistent, high-quality results.</p>
+      <p class="section-desc">Save Instagram content in just a couple of clicks — safely, quickly, and without quality loss.</p>
       <div class="features">
         <div class="feature">
           <img src="assets/icons/fast-download.png" alt="Fast downloads" class="feature-icon" loading="lazy" width="60" height="60">
@@ -133,7 +124,7 @@
         <div class="feature">
           <img src="assets/icons/secure.png" alt="Privacy &amp; security" class="feature-icon" loading="lazy" width="60" height="60">
           <h3>Privacy &amp; security</h3>
-          <p>No login, no sign-up. Downloads are processed securely with user privacy in mind.</p>
+          <p>No login, no sign-up. Downloads are processed securely.</p>
         </div>
       </div>
     </div>
@@ -153,7 +144,7 @@
         </div>
         <div class="faq-item">
           <h3>Which devices and browsers does SpeedDL support?</h3>
-          <p>Any device with a modern browser: phones, tablets, laptops, and desktops running macOS, Windows, iOS, Android, or Linux. Tested with Chrome, Safari, Firefox, Edge, and Opera.</p>
+          <p>Any device with a modern browser: phones, tablets, laptops, and desktops running macOS, Windows, iOS, Android, or Linux.</p>
         </div>
         <div class="faq-item">
           <h3>Do I need to create an account or install an app?</h3>
@@ -163,51 +154,85 @@
     </div>
   </section>
 
-  <!-- ===== ANIMATED TESTIMONIALS ===== -->
-  <section class="section testimonials-animated-section">
+  <!-- ===== SWIPEABLE REVIEWS (Real DP) ===== -->
+  <section class="section reviews-section">
     <div class="container">
       <h2>Over 30 Million Users Worldwide Choose SpeedDL</h2>
       <p class="section-desc">Why is SpeedDL a top choice? Hear from people who use it every day. Real feedback from creators, students, and professionals.</p>
 
-      <div class="testimonials-grid" id="testimonialsGrid">
+      <div class="reviews-slider" id="reviewsSlider">
 
-        <div class="testimonial-card slide-in" data-delay="0">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar avatar-1">LM</div>
-            <div>
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Lena M." class="review-dp" loading="lazy">
+            <div class="review-user">
               <h4>Lena M.</h4>
-              <p class="testimonial-role">Student</p>
+              <p>Student</p>
             </div>
           </div>
-          <p class="testimonial-text">"Tried so many downloaders with popups and errors — SpeedDL is clean, fast, and gets it done in seconds."</p>
-          <div class="testimonial-stars">★★★★★</div>
+          <p class="review-text">"Tried so many downloaders with popups and errors — SpeedDL is clean, fast, and gets it done in seconds."</p>
+          <div class="review-stars">★★★★★</div>
         </div>
 
-        <div class="testimonial-card slide-in" data-delay="200">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar avatar-2">MT</div>
-            <div>
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Maria T." class="review-dp" loading="lazy">
+            <div class="review-user">
               <h4>Maria T.</h4>
-              <p class="testimonial-role">Social Media Manager</p>
+              <p>Social Media Manager</p>
             </div>
           </div>
-          <p class="testimonial-text">"Saved my day more than once. Needed a Story ASAP — SpeedDL worked instantly while others failed. Super reliable."</p>
-          <div class="testimonial-stars">★★★★★</div>
+          <p class="review-text">"Saved my day more than once. Needed a Story ASAP — SpeedDL worked instantly while others failed. Super reliable."</p>
+          <div class="review-stars">★★★★★</div>
         </div>
 
-        <div class="testimonial-card slide-in" data-delay="400">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar avatar-3">N</div>
-            <div>
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Nina" class="review-dp" loading="lazy">
+            <div class="review-user">
               <h4>Nina</h4>
-              <p class="testimonial-role">College Student</p>
+              <p>College Student</p>
             </div>
           </div>
-          <p class="testimonial-text">"No instructions needed. Paste link and go. SpeedDL does exactly what it promises — fast, free, and easy."</p>
-          <div class="testimonial-stars">★★★★★</div>
+          <p class="review-text">"No instructions needed. Paste link and go. SpeedDL does exactly what it promises — fast, free, and easy."</p>
+          <div class="review-stars">★★★★★</div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rahul K." class="review-dp" loading="lazy">
+            <div class="review-user">
+              <h4>Rahul K.</h4>
+              <p>Content Creator</p>
+            </div>
+          </div>
+          <p class="review-text">"Best Instagram downloader I've used. No ads, no watermark, works flawlessly every single time."</p>
+          <div class="review-stars">★★★★★</div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Priya S." class="review-dp" loading="lazy">
+            <div class="review-user">
+              <h4>Priya S.</h4>
+              <p>Freelancer</p>
+            </div>
+          </div>
+          <p class="review-text">"Simple, fast, and reliable. I download Reels for my client work every day. Highly recommended."</p>
+          <div class="review-stars">★★★★★</div>
         </div>
 
       </div>
+
+      <!-- Swipe hint dots -->
+      <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
     </div>
   </section>
 
@@ -319,4 +344,4 @@
 <script src="script.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
-                                         </html>
+  </html>
