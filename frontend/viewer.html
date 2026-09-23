@@ -6,7 +6,7 @@
 <title>Instagram Stories Viewer - Anonymous Story Viewer | SpeedDL</title>
 <meta name="description" content="View Instagram Stories anonymously from public accounts. No login required. Free anonymous Instagram Stories Viewer by SpeedDL.">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#7E17FF">
+<meta name="theme-color" content="#F59E0B">
 
 <link rel="preload" href="assets/icons/favicon.png" as="image">
 <link rel="preload" href="assets/icons/logo.png" as="image">
@@ -40,18 +40,18 @@
     {"@type": "Organization", "name": "SpeedDL", "url": "https://speeddl.pages.dev"},
     {"@type": "WebApplication", "name": "SpeedDL Stories Viewer", "url": "https://speeddl.pages.dev/viewer.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Windows, Linux, iOS, Android, macOS", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}},
     {"@type": "FAQPage", "mainEntity": [
-      {"@type": "Question", "name": "Will Instagram know I viewed the story?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL loads public stories without logging into your account, so the owner is not notified and you do not appear in their viewers list."}},
+      {"@type": "Question", "name": "Will Instagram know I viewed the story?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL loads public stories without logging into your account, so the owner is not notified."}},
       {"@type": "Question", "name": "Is the anonymous Instagram viewer free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, it is completely free with no limits and no registration."}},
       {"@type": "Question", "name": "Do I need to log in or create an account?", "acceptedAnswer": {"@type": "Answer", "text": "No login is ever required. SpeedDL never asks for your Instagram password."}},
-      {"@type": "Question", "name": "Can I view private accounts?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL only works with public Instagram accounts, in line with Instagram's rules."}},
-      {"@type": "Question", "name": "Can the person see my IP address?", "acceptedAnswer": {"@type": "Answer", "text": "No. The request goes through SpeedDL, not from you directly, so the account owner cannot see your IP."}},
-      {"@type": "Question", "name": "How is this different from a fake or burner account?", "acceptedAnswer": {"@type": "Answer", "text": "A burner account still appears in the viewers list and can be blocked. SpeedDL does not interact with the account at all, so you stay fully anonymous."}},
-      {"@type": "Question", "name": "Does Instagram notify screenshots of stories?", "acceptedAnswer": {"@type": "Answer", "text": "Instagram does not notify users of story screenshots. With SpeedDL you can also download the story instead of screenshotting."}},
+      {"@type": "Question", "name": "Can I view private accounts?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL only works with public Instagram accounts."}},
+      {"@type": "Question", "name": "Can the person see my IP address?", "acceptedAnswer": {"@type": "Answer", "text": "No. The request goes through SpeedDL, not from you directly."}},
+      {"@type": "Question", "name": "How is this different from a fake or burner account?", "acceptedAnswer": {"@type": "Answer", "text": "A burner account still appears in the viewers list and can be blocked. SpeedDL does not interact with the account at all."}},
+      {"@type": "Question", "name": "Does Instagram notify screenshots of stories?", "acceptedAnswer": {"@type": "Answer", "text": "Instagram does not notify users of story screenshots."}},
       {"@type": "Question", "name": "Can I download the stories I view?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, you can save public stories, highlights and posts to your device in original quality."}},
       {"@type": "Question", "name": "Which devices does it work on?", "acceptedAnswer": {"@type": "Answer", "text": "Any device with a modern browser: iPhone, Android, Windows, and Mac."}},
       {"@type": "Question", "name": "Do you store my activity or search history?", "acceptedAnswer": {"@type": "Answer", "text": "No. SpeedDL does not keep logs of the profiles you view or any search history."}},
-      {"@type": "Question", "name": "Is it legal to view Instagram stories anonymously?", "acceptedAnswer": {"@type": "Answer", "text": "Viewing public content is generally legal. Use it responsibly and respect others' privacy and copyright."}},
-      {"@type": "Question", "name": "Why is SpeedDL free?", "acceptedAnswer": {"@type": "Answer", "text": "SpeedDL is supported by light advertising, which lets us keep the anonymous viewer free for everyone."}}
+      {"@type": "Question", "name": "Is it legal to view Instagram stories anonymously?", "acceptedAnswer": {"@type": "Answer", "text": "Viewing public content is generally legal. Use it responsibly."}},
+      {"@type": "Question", "name": "Why is SpeedDL free?", "acceptedAnswer": {"@type": "Answer", "text": "SpeedDL is supported by light advertising."}}
     ]}
   ]
 }
@@ -82,13 +82,70 @@
   <div class="container">
 
     <div class="cat-nav">
-      <a href="video.html" class="cat-btn"><img src="assets/icons/video.png" alt="Video" loading="lazy" width="18" height="18"><span>Video</span></a>
-      <a href="photo.html" class="cat-btn"><img src="assets/icons/photo.png" alt="Photo" loading="lazy" width="18" height="18"><span>Photo</span></a>
-      <a href="reels.html" class="cat-btn"><img src="assets/icons/reels.png" alt="Reels" loading="lazy" width="18" height="18"><span>Reels</span></a>
-      <a href="story.html" class="cat-btn"><img src="assets/icons/story.png" alt="Story" loading="lazy" width="18" height="18"><span>Story</span></a>
-      <a href="igtv.html" class="cat-btn"><img src="assets/icons/igtv.png" alt="Igtv" loading="lazy" width="18" height="18"><span>Igtv</span></a>
-      <a href="carousel.html" class="cat-btn"><img src="assets/icons/carousel.png" alt="Carousel" loading="lazy" width="18" height="18"><span>Carousel</span></a>
-      <a href="viewer.html" class="cat-btn active"><img src="assets/icons/viewer.png" alt="Viewer" loading="lazy" width="18" height="18"><span>Viewer</span></a>
+      <a href="video.html" class="cat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Video</span>
+      </a>
+      <a href="photo.html" class="cat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+        <span>Photo</span>
+      </a>
+      <a href="reels.html" class="cat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="3"/>
+          <line x1="7" y1="2" x2="7" y2="22"/>
+          <line x1="17" y1="2" x2="17" y2="22"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <line x1="2" y1="7" x2="7" y2="7"/>
+          <line x1="2" y1="17" x2="7" y2="17"/>
+          <line x1="17" y1="7" x2="22" y2="7"/>
+          <line x1="17" y1="17" x2="22" y2="17"/>
+          <path d="M10 9l4 3-4 3V9z" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Reels</span>
+      </a>
+      <a href="story.html" class="cat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="4" opacity="0.5"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+        <span>Story</span>
+      </a>
+      <a href="igtv.html" class="cat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <line x1="8" y1="20" x2="8" y2="22"/>
+          <line x1="16" y1="20" x2="16" y2="22"/>
+          <line x1="6" y1="22" x2="10" y2="22"/>
+          <line x1="14" y1="22" x2="18" y2="22"/>
+          <path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Igtv</span>
+      </a>
+      <a href="carousel.html" class="cat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="2" width="14" height="14" rx="2" opacity="0.4"/>
+          <rect x="4" y="4" width="14" height="14" rx="2" opacity="0.7"/>
+          <rect x="2" y="6" width="14" height="14" rx="2" fill="none"/>
+        </svg>
+        <span>Carousel</span>
+      </a>
+      <a href="viewer.html" class="cat-btn active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Viewer</span>
+      </a>
     </div>
 
     <h1>Instagram Stories Viewer</h1>
@@ -333,4 +390,4 @@
 <script src="script.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
-      </html>
+  </html>
