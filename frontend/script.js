@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - SCRIPT.JS (PART 1 OF 2)
+   SPEEDDL - SCRIPT.JS
    ============================================ */
 
 const API_URL = 'https://etc-shorter-inspector-function.trycloudflare.com';
@@ -18,9 +18,11 @@ const homeContent = document.getElementById('homeContent');
 
 let globalProfileData = null;
 
+/* ---------- Theme Init (respects system preference) ---------- */
 (function initTheme() {
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
     document.documentElement.setAttribute('data-theme', 'dark');
   }
 })();
@@ -38,6 +40,7 @@ if (themeToggle) {
   });
 }
 
+/* ---------- URL Tab Parameter Handler ---------- */
 (function handleTabParameter() {
   const params = new URLSearchParams(window.location.search);
   const tab = params.get('tab');
@@ -76,6 +79,7 @@ if (themeToggle) {
   }, 300);
 })();
 
+/* ---------- Paste Button ---------- */
 if (pasteBtn) {
   pasteBtn.addEventListener('click', async () => {
     try {
@@ -90,6 +94,7 @@ if (pasteBtn) {
   });
 }
 
+/* ---------- Clear Button ---------- */
 if (clearBtn) {
   clearBtn.addEventListener('click', () => {
     urlInput.value = '';
@@ -100,13 +105,17 @@ if (clearBtn) {
   });
 }
 
+/* ---------- Download Button + Enter Key ---------- */
 if (downloadBtn) {
   downloadBtn.addEventListener('click', handleDownload);
-  urlInput.addEventListener('keypress', e => {
+  urlInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') handleDownload();
   });
 }
+/* ---------- Instagram URL Validation ---------- */
+const IG_URL_REGEX = /^https?:\/\/(www\.)?instagram\.com\/(p|reel|reels|tv|stories)\/[\w-]+/i;
 
+/* ---------- Handle Download ---------- */
 async function handleDownload() {
   const url = urlInput.value.trim();
 
@@ -115,14 +124,30 @@ async function handleDownload() {
     return;
   }
 
+  // URL validation (profile username bhi allow karo)
+  const isUsername = /^@?[\w.]{1,30}$/.test(url) && !url.includes('/');
+  const isInstagramUrl = IG_URL_REGEX.test(url);
+
+  if (!isInstagramUrl && !isUsername) {
+    status.textContent = 'Invalid Instagram link. Please paste a valid URL.';
+    return;
+  }
+
   showLoading();
+
+  // AbortController for timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
     const response = await fetch(`${API_URL}/api/download`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url })
+      body: JSON.stringify({ url }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     const data = await response.json();
 
@@ -137,10 +162,17 @@ async function handleDownload() {
     showResult(data);
 
   } catch (err) {
-    showError(err.message);
+    clearTimeout(timeoutId);
+
+    if (err.name === 'AbortError') {
+      showError('Request timed out. Please try again.');
+    } else {
+      showError(err.message);
+    }
   }
 }
 
+/* ---------- Show Loading ---------- */
 function showLoading() {
   if (homeContent) homeContent.classList.add('hidden');
   if (resultsSection) resultsSection.classList.add('hidden');
@@ -150,6 +182,7 @@ function showLoading() {
   if (pasteBtn) pasteBtn.classList.add('hidden');
   if (clearBtn) clearBtn.classList.remove('hidden');
   status.textContent = '';
+  if (loadingText) loadingText.textContent = '';
 
   const url = urlInput.value.toLowerCase();
   let mediaType = 'media';
@@ -170,10 +203,7 @@ function showLoading() {
   }, 100);
 }
 
-/* ============================================
-   SPEEDDL - SCRIPT.JS (PART 2 OF 2)
-   ============================================ */
-
+/* ---------- Show Result ---------- */
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -194,6 +224,21 @@ function showResult(data) {
   }, 100);
 }
 
+/* ---------- Show Error ---------- */
+function showError(message) {
+  if (loadingSection) loadingSection.classList.add('hidden');
+  if (homeContent) homeContent.classList.remove('hidden');
+  if (loadingText) loadingText.textContent = '';
+
+  status.textContent = 'Error: ' + message;
+  downloadBtn.disabled = false;
+
+  const inputBox = document.querySelector('.input-box');
+  if (inputBox) {
+    inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+/* ---------- Render Profile View ---------- */
 function renderProfileView(data) {
   const postsCount = (data.posts || []).length;
   const storiesCount = (data.stories || []).length;
@@ -202,20 +247,18 @@ function renderProfileView(data) {
 
   let html = `
     <div style="max-width:540px; margin:0 auto 20px;">
-      <!-- Profile Header -->
       <div style="display:flex; align-items:flex-start; gap:18px; margin-bottom:14px; text-align:left;">
         <div style="position:relative; width:82px; height:82px; flex-shrink:0;">
-          <img src="${data.avatar}" alt="Avatar" style="width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block; background:#1e293b;">
+          <img src="${escapeHtml(data.avatar)}" alt="Avatar" style="width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block; background:#1e293b;">
           <div style="position:absolute; bottom:0; right:0; background:#0284c7; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">⛶</div>
         </div>
         <div style="flex:1;">
           <div style="font-size:1.1rem; font-weight:700; color:var(--text, #0f172a); margin-bottom:6px; display:flex; align-items:center; gap:6px;">
             <span>@${escapeHtml(data.username)}</span>
-            <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
+            <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" rel="noopener noreferrer" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
           </div>
-          <!-- Stats Row -->
           <div style="display:flex; gap:18px; margin-bottom:8px; font-size:0.85rem; color:#64748b;">
-            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.postsCount || '0')}</b> posts</div>
+            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${postsCount}</b> posts</div>
             <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.followers || '0')}</b> followers</div>
             <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.following || '0')}</b> following</div>
           </div>
@@ -224,133 +267,140 @@ function renderProfileView(data) {
         </div>
       </div>
 
-      <!-- 4 Live Clickable Tabs -->
       <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); margin:18px 0 16px;">
-        <div id="tabBtnPosts" onclick="switchActiveTab('posts')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">POSTS (${postsCount})</div>
-        <div id="tabBtnStories" onclick="switchActiveTab('stories')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">STORIES (${storiesCount})</div>
-        <div id="tabBtnHighlights" onclick="switchActiveTab('highlights')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">HIGHLIGHTS (${highlightsCount})</div>
-        <div id="tabBtnReels" onclick="switchActiveTab('reels')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">REELS (${reelsCount})</div>
+        <div class="profile-tab" data-tab="posts" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">POSTS (${postsCount})</div>
+        <div class="profile-tab" data-tab="stories" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">STORIES (${storiesCount})</div>
+        <div class="profile-tab" data-tab="highlights" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">HIGHLIGHTS (${highlightsCount})</div>
+        <div class="profile-tab" data-tab="reels" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">REELS (${reelsCount})</div>
       </div>
 
-      <!-- Dynamic Content -->
       <div id="profileTabContent"></div>
     </div>
   `;
 
   if (resultContent) resultContent.innerHTML = html;
-  
+
+  // Attach tab click handlers (XSS-safe, CSP-friendly)
+  resultContent.querySelectorAll('.profile-tab').forEach(tabEl => {
+    tabEl.addEventListener('click', () => {
+      switchActiveTab(tabEl.dataset.tab);
+    });
+  });
+
   if (postsCount > 0) switchActiveTab('posts');
   else if (storiesCount > 0) switchActiveTab('stories');
-  else switchActiveTab('highlights');
+  else if (highlightsCount > 0) switchActiveTab('highlights');
+  else if (reelsCount > 0) switchActiveTab('reels');
 }
-
-window.switchActiveTab = function(tab) {
+/* ---------- Switch Active Tab ---------- */
+function switchActiveTab(tab) {
   const data = globalProfileData;
   if (!data) return;
 
-  ['posts', 'stories', 'highlights', 'reels'].forEach(t => {
-    const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
-    if (btn) {
-      if (t === tab) {
-        btn.style.color = '#0284c7';
-        btn.style.borderBottom = '2px solid #0284c7';
-      } else {
-        btn.style.color = '#64748b';
-        btn.style.borderBottom = 'none';
-      }
+  // Update tab button styles
+  document.querySelectorAll('.profile-tab').forEach(tabEl => {
+    if (tabEl.dataset.tab === tab) {
+      tabEl.style.color = '#0284c7';
+      tabEl.style.borderBottom = '2px solid #0284c7';
+    } else {
+      tabEl.style.color = '#64748b';
+      tabEl.style.borderBottom = 'none';
     }
   });
 
   const content = document.getElementById('profileTabContent');
   if (!content) return;
 
-  // 1. POSTS
+  /* ---------- 1. POSTS ---------- */
   if (tab === 'posts') {
     const posts = data.posts || [];
     if (posts.length === 0) {
-      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">Koi feed post nahi mila.</p>`;
+      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">No feed posts found.</p>`;
       return;
     }
     let html = `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">`;
-    posts.forEach((item, idx) => {
+    posts.forEach((item) => {
       const isVid = item.type === 'video';
       html += `
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:1/1; background:#000;">
-            <img src="${item.thumbnail}" alt="Post" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <img src="${escapeHtml(item.thumbnail)}" alt="Post" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${isVid ? '▶' : '⛶'}</div>
           </div>
           <div style="padding:8px 10px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
             <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">❤️ ${(item.likes || 0).toLocaleString()} &bull; 💬 ${item.comments || 0}</div>
-            <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:7px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download</a>
+            <a href="${escapeHtml(item.url)}" download class="result-download-btn" style="background:#0284c7; color:white; padding:7px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download</a>
           </div>
         </div>
       `;
     });
     html += `</div>`;
     content.innerHTML = html;
+  }
 
-  // 2. REELS
-  } else if (tab === 'reels') {
+  /* ---------- 2. REELS ---------- */
+  else if (tab === 'reels') {
     const reels = data.reels || [];
     if (reels.length === 0) {
-      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">Koi reels nahi mili.</p>`;
+      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">No reels found.</p>`;
       return;
     }
     let html = `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">`;
-    reels.forEach((item, idx) => {
+    reels.forEach((item) => {
       html += `
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
-            <img src="${item.thumbnail}" alt="Reel" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <img src="${escapeHtml(item.thumbnail)}" alt="Reel" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.85rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">▶</div>
           </div>
           <div style="padding:8px 10px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
             <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">❤️ ${(item.likes || 0).toLocaleString()} &bull; 💬 ${item.comments || 0}</div>
-            <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:7px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Reel</a>
+            <a href="${escapeHtml(item.url)}" download class="result-download-btn" style="background:#0284c7; color:white; padding:7px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Reel</a>
           </div>
         </div>
       `;
     });
     html += `</div>`;
     content.innerHTML = html;
+  }
 
-  // 3. STORIES
-  } else if (tab === 'stories') {
+  /* ---------- 3. STORIES ---------- */
+  else if (tab === 'stories') {
     const stories = data.stories || [];
     if (stories.length === 0) {
-      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">User ne pichhle 24 ghante mein koi active story nahi lagayi hai.</p>`;
+      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">No active stories in the last 24 hours.</p>`;
       return;
     }
     let sHtml = `<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">`;
-    stories.forEach((s, idx) => {
+    stories.forEach((s) => {
       sHtml += `
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
-            <img src="${s.thumbnail || s.url}" alt="Story" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <img src="${escapeHtml(s.thumbnail || s.url)}" alt="Story" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${s.type === 'video' ? '▶' : '⛶'}</div>
           </div>
           <div style="padding:8px;">
-            <a href="${s.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Story</a>
+            <a href="${escapeHtml(s.url)}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Story</a>
           </div>
         </div>
       `;
     });
     sHtml += `</div>`;
     content.innerHTML = sHtml;
+  }
 
-  // 4. HIGHLIGHTS
-  } else if (tab === 'highlights') {
+  /* ---------- 4. HIGHLIGHTS ---------- */
+  else if (tab === 'highlights') {
     const hls = data.highlights || [];
     if (hls.length === 0) {
-      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">Koi highlights nahi mile.</p>`;
+      content.innerHTML = `<p style="color:#64748b; font-size:0.85rem; padding:20px 0; text-align:center;">No highlights found.</p>`;
       return;
     }
     let hHtml = `<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; text-align:center;">`;
     hls.forEach(h => {
       hHtml += `
-        <div onclick="openHighlightAlbum('${h.id}', '${escapeHtml(h.title)}')" style="background:var(--card-bg, #ffffff); border:1px solid rgba(0,0,0,0.08); border-radius:12px; padding:10px 4px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-          <img src="${h.cover}" alt="HL" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid #0284c7; margin-bottom:6px; display:inline-block; background:#f1f5f9;">
+        <div class="highlight-card" data-id="${escapeHtml(h.id)}" data-title="${escapeHtml(h.title)}" style="background:var(--card-bg, #ffffff); border:1px solid rgba(0,0,0,0.08); border-radius:12px; padding:10px 4px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+          <img src="${escapeHtml(h.cover)}" alt="Highlight" loading="lazy" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid #0284c7; margin-bottom:6px; display:inline-block; background:#f1f5f9;">
           <div style="font-size:0.75rem; font-weight:600; color:var(--text, #0f172a); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px;">${escapeHtml(h.title)}</div>
           <span style="font-size:0.68rem; color:#0284c7; font-weight:700;">Open Folder ➔</span>
         </div>
@@ -358,27 +408,35 @@ window.switchActiveTab = function(tab) {
     });
     hHtml += `</div><div id="albumViewer" style="margin-top:20px;"></div>`;
     content.innerHTML = hHtml;
-  }
-};
 
-window.openHighlightAlbum = async function(id, title) {
+    // Attach highlight click handlers (XSS-safe)
+    content.querySelectorAll('.highlight-card').forEach(card => {
+      card.addEventListener('click', () => {
+        openHighlightAlbum(card.dataset.id, card.dataset.title);
+      });
+    });
+  }
+}
+/* ---------- Open Highlight Album ---------- */
+async function openHighlightAlbum(id, title) {
   const viewer = document.getElementById('albumViewer');
   if (!viewer) return;
 
-  viewer.innerHTML = `<p style="color:#0284c7; font-size:0.85rem; padding:14px 0; text-align:center;">Loading "${title}" items...</p>`;
+  viewer.innerHTML = `<p style="color:#0284c7; font-size:0.85rem; padding:14px 0; text-align:center;">Loading "${escapeHtml(title)}" items...</p>`;
   viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   try {
-    const res = await fetch(`${API_URL}/api/highlight/${id}`);
+    const res = await fetch(`${API_URL}/api/highlight/${encodeURIComponent(id)}`);
     const json = await res.json();
+
     if (!json.success || !json.items || json.items.length === 0) {
-      throw new Error('Is highlight ke items nahi mile');
+      throw new Error('No items found in this highlight');
     }
 
     let aHtml = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 4px;">
-        <span style="font-size:0.9rem; font-weight:700; color:var(--text, #0f172a);">${title} (${json.items.length} items)</span>
-        <button onclick="document.getElementById('albumViewer').innerHTML=''" style="background:#e2e8f0; border:none; border-radius:6px; padding:4px 8px; font-size:0.75rem; cursor:pointer; font-weight:600;">✕ Close</button>
+        <span style="font-size:0.9rem; font-weight:700; color:var(--text, #0f172a);">${escapeHtml(title)} (${json.items.length} items)</span>
+        <button id="closeAlbumBtn" style="background:#e2e8f0; border:none; border-radius:6px; padding:4px 8px; font-size:0.75rem; cursor:pointer; font-weight:600;">✕ Close</button>
       </div>
       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
     `;
@@ -387,11 +445,11 @@ window.openHighlightAlbum = async function(id, title) {
       aHtml += `
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
-            <img src="${item.thumbnail || item.url}" alt="Item" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <img src="${escapeHtml(item.thumbnail || item.url)}" alt="Item" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${item.type === 'video' ? '▶' : '⛶'}</div>
           </div>
           <div style="padding:8px;">
-            <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Item ${idx + 1}</a>
+            <a href="${escapeHtml(item.url)}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Item ${idx + 1}</a>
           </div>
         </div>
       `;
@@ -399,11 +457,19 @@ window.openHighlightAlbum = async function(id, title) {
     aHtml += `</div>`;
     viewer.innerHTML = aHtml;
 
-  } catch (err) {
-    viewer.innerHTML = `<p style="color:#ef4444; font-size:0.85rem; text-align:center;">Error: ${err.message}</p>`;
-  }
-};
+    // Close button handler (XSS-safe, CSP-friendly)
+    const closeBtn = document.getElementById('closeAlbumBtn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        viewer.innerHTML = '';
+      });
+    }
 
+  } catch (err) {
+    viewer.innerHTML = `<p style="color:#ef4444; font-size:0.85rem; text-align:center;">Error: ${escapeHtml(err.message)}</p>`;
+  }
+}
+/* ---------- Render Media View ---------- */
 function renderMediaView(data) {
   const medias = data.medias || [];
   let html = '';
@@ -414,15 +480,15 @@ function renderMediaView(data) {
     const quality = media.quality || 'HD Video';
 
     const mediaElement = isVideo
-      ? `<video src="${downloadUrl}" poster="${media.thumbnail || ''}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
-      : `<img src="${downloadUrl}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
+      ? `<video src="${escapeHtml(downloadUrl)}" poster="${escapeHtml(media.thumbnail || '')}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
+      : `<img src="${escapeHtml(downloadUrl)}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
 
     html += `
       <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
         ${mediaElement}
         <div class="result-actions" style="margin-top: 14px;">
-          <a href="${downloadUrl}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
-            Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${quality}
+          <a href="${escapeHtml(downloadUrl)}" download rel="noopener noreferrer" class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
+            Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${escapeHtml(quality)}
           </a>
         </div>
         ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.88rem; text-align:center;">${escapeHtml(data.title)}</div>` : ''}
@@ -434,47 +500,30 @@ function renderMediaView(data) {
   if (resultContent) resultContent.innerHTML = html;
 }
 
-function showError(message) {
-  if (loadingSection) loadingSection.classList.add('hidden');
-  if (homeContent) homeContent.classList.remove('hidden');
-
-  status.textContent = 'Error: ' + message;
-  downloadBtn.disabled = false;
-
-  const inputBox = document.querySelector('.input-box');
-  if (inputBox) {
-    inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}
-
+/* ---------- Escape HTML (XSS-safe) ---------- */
 function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  if (text === null || text === undefined) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/`/g, '&#96;');
 }
 
-(function initLazyLoading() {
-  if ('loading' in HTMLImageElement.prototype) {
-    document.querySelectorAll('img:not([loading])').forEach(img => {
-      if (!img.closest('header') && !img.classList.contains('hero-logo')) {
-        img.loading = 'lazy';
-        img.decoding = 'async';
-      }
-    });
-  }
-})();
-
+/* ---------- Set Year in Footer ---------- */
 (function setYear() {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
-
-// ============================================
-// ABOUT PAGE ANIMATIONS
-// ============================================
+/* ============================================
+   ABOUT PAGE ANIMATIONS
+   ============================================ */
 
 (function initAboutAnimations() {
-  // Count-Up Animation
+
+  /* ---------- Count-Up Animation ---------- */
   function animateCount(el, target, duration = 1800) {
     const isDecimal = target % 1 !== 0;
     const startTime = performance.now();
@@ -497,7 +546,7 @@ function escapeHtml(text) {
     requestAnimationFrame(update);
   }
 
-  // Stats Reveal + Count Up
+  /* ---------- Stats Reveal + Count Up ---------- */
   const statsRow = document.querySelector('.stats-row');
   if (statsRow) {
     const observer = new IntersectionObserver((entries) => {
@@ -517,7 +566,7 @@ function escapeHtml(text) {
     observer.observe(statsRow);
   }
 
-  // Reviews Slider Dots
+  /* ---------- Reviews Slider Dots ---------- */
   const slider = document.getElementById('reviewsSlider');
   const dots = document.querySelectorAll('.slider-dots .dot');
   if (slider && dots.length) {
@@ -537,4 +586,9 @@ function escapeHtml(text) {
       });
     });
   }
+
 })();
+
+/* ============================================
+   END OF SCRIPT.JS
+   ============================================ */
