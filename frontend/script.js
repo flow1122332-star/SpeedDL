@@ -124,14 +124,12 @@ async function handleDownload() {
     return;
   }
 
-  // URL validation (profile username bhi allow karo)
-  const isUsername = /^@?[\w.]{1,30}$/.test(url) && !url.includes('/');
-  const isInstagramUrl = IG_URL_REGEX.test(url);
-
-  if (!isInstagramUrl && !isUsername) {
-    status.textContent = 'Invalid Instagram link. Please paste a valid URL.';
-    return;
-  }
+  // URL validation (Allow ALL Instagram links and usernames)
+const isValid = url.includes('instagram.com') || /^@?[\w.]{1,30}$/.test(url);
+if (!isValid) {
+  status.textContent = 'Please enter a valid Instagram URL or @username';
+  return;
+}
 
   showLoading();
 
