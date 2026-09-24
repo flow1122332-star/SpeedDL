@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - COMPLETE JAVASCRIPT (POSTS & REELS UNLOCKED)
+   SPEEDDL - SCRIPT.JS (PART 1 OF 2)
    ============================================ */
 
 const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
@@ -170,6 +170,10 @@ function showLoading() {
   }, 100);
 }
 
+/* ============================================
+   SPEEDDL - SCRIPT.JS (PART 2 OF 2)
+   ============================================ */
+
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -190,7 +194,6 @@ function showResult(data) {
   }, 100);
 }
 
-// FASTDL PROFILE VIEW (POSTS, STORIES, HIGHLIGHTS, REELS)
 function renderProfileView(data) {
   const postsCount = (data.posts || []).length;
   const storiesCount = (data.stories || []).length;
@@ -203,12 +206,12 @@ function renderProfileView(data) {
       <div style="display:flex; align-items:flex-start; gap:18px; margin-bottom:14px; text-align:left;">
         <div style="position:relative; width:82px; height:82px; flex-shrink:0;">
           <img src="${data.avatar}" alt="Avatar" style="width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block; background:#1e293b;">
-          <div style="position:absolute; bottom:0; right:0; background:#0284c7; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">â›¶</div>
+          <div style="position:absolute; bottom:0; right:0; background:#0284c7; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:0.75rem; border:2px solid #fff;">⛶</div>
         </div>
         <div style="flex:1;">
           <div style="font-size:1.1rem; font-weight:700; color:var(--text, #0f172a); margin-bottom:6px; display:flex; align-items:center; gap:6px;">
             <span>@${escapeHtml(data.username)}</span>
-            <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">â†—</a>
+            <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
           </div>
           <!-- Stats Row -->
           <div style="display:flex; gap:18px; margin-bottom:8px; font-size:0.85rem; color:#64748b;">
@@ -221,7 +224,7 @@ function renderProfileView(data) {
         </div>
       </div>
 
-      <!-- 4 Live Clickable Tabs (FastDL Style) -->
+      <!-- 4 Live Clickable Tabs -->
       <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); margin:18px 0 16px;">
         <div id="tabBtnPosts" onclick="switchActiveTab('posts')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">POSTS (${postsCount})</div>
         <div id="tabBtnStories" onclick="switchActiveTab('stories')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">STORIES (${storiesCount})</div>
@@ -229,14 +232,13 @@ function renderProfileView(data) {
         <div id="tabBtnReels" onclick="switchActiveTab('reels')" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">REELS (${reelsCount})</div>
       </div>
 
-      <!-- Dynamic Tab Content -->
+      <!-- Dynamic Content -->
       <div id="profileTabContent"></div>
     </div>
   `;
 
   if (resultContent) resultContent.innerHTML = html;
   
-  // Default open POSTS if available, otherwise STORIES or HIGHLIGHTS
   if (postsCount > 0) switchActiveTab('posts');
   else if (storiesCount > 0) switchActiveTab('stories');
   else switchActiveTab('highlights');
@@ -262,7 +264,7 @@ window.switchActiveTab = function(tab) {
   const content = document.getElementById('profileTabContent');
   if (!content) return;
 
-  // 1. POSTS (Feed Posts with Likes & Comments)
+  // 1. POSTS
   if (tab === 'posts') {
     const posts = data.posts || [];
     if (posts.length === 0) {
@@ -276,10 +278,10 @@ window.switchActiveTab = function(tab) {
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:1/1; background:#000;">
             <img src="${item.thumbnail}" alt="Post" style="width:100%; height:100%; object-fit:cover; display:block;">
-            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${isVid ? 'â–¶' : 'â›¶'}</div>
+            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${isVid ? '▶' : '⛶'}</div>
           </div>
           <div style="padding:8px 10px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
-            <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">â¤ï¸ ${(item.likes || 0).toLocaleString()} &bull; ðŸ’¬ ${item.comments || 0}</div>
+            <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">❤️ ${(item.likes || 0).toLocaleString()} &bull; 💬 ${item.comments || 0}</div>
             <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:7px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download</a>
           </div>
         </div>
@@ -288,7 +290,7 @@ window.switchActiveTab = function(tab) {
     html += `</div>`;
     content.innerHTML = html;
 
-  // 2. REELS (Profile Video Reels with Likes & Sound)
+  // 2. REELS
   } else if (tab === 'reels') {
     const reels = data.reels || [];
     if (reels.length === 0) {
@@ -301,10 +303,10 @@ window.switchActiveTab = function(tab) {
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
             <img src="${item.thumbnail}" alt="Reel" style="width:100%; height:100%; object-fit:cover; display:block;">
-            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.85rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">â–¶</div>
+            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.85rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">▶</div>
           </div>
           <div style="padding:8px 10px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
-            <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">â¤ï¸ ${(item.likes || 0).toLocaleString()} &bull; ðŸ’¬ ${item.comments || 0}</div>
+            <div style="font-size:0.75rem; color:#64748b; margin-bottom:6px;">❤️ ${(item.likes || 0).toLocaleString()} &bull; 💬 ${item.comments || 0}</div>
             <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:7px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Reel</a>
           </div>
         </div>
@@ -313,7 +315,7 @@ window.switchActiveTab = function(tab) {
     html += `</div>`;
     content.innerHTML = html;
 
-  // 3. STORIES (Active 30+ Stories)
+  // 3. STORIES
   } else if (tab === 'stories') {
     const stories = data.stories || [];
     if (stories.length === 0) {
@@ -326,7 +328,7 @@ window.switchActiveTab = function(tab) {
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
             <img src="${s.thumbnail || s.url}" alt="Story" style="width:100%; height:100%; object-fit:cover; display:block;">
-            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${s.type === 'video' ? 'â–¶' : 'â›¶'}</div>
+            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${s.type === 'video' ? '▶' : '⛶'}</div>
           </div>
           <div style="padding:8px;">
             <a href="${s.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Story</a>
@@ -337,7 +339,7 @@ window.switchActiveTab = function(tab) {
     sHtml += `</div>`;
     content.innerHTML = sHtml;
 
-  // 4. HIGHLIGHTS TRAY (Clickable Folders)
+  // 4. HIGHLIGHTS
   } else if (tab === 'highlights') {
     const hls = data.highlights || [];
     if (hls.length === 0) {
@@ -350,7 +352,7 @@ window.switchActiveTab = function(tab) {
         <div onclick="openHighlightAlbum('${h.id}', '${escapeHtml(h.title)}')" style="background:var(--card-bg, #ffffff); border:1px solid rgba(0,0,0,0.08); border-radius:12px; padding:10px 4px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
           <img src="${h.cover}" alt="HL" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid #0284c7; margin-bottom:6px; display:inline-block; background:#f1f5f9;">
           <div style="font-size:0.75rem; font-weight:600; color:var(--text, #0f172a); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px;">${escapeHtml(h.title)}</div>
-          <span style="font-size:0.68rem; color:#0284c7; font-weight:700;">Open Folder âž”</span>
+          <span style="font-size:0.68rem; color:#0284c7; font-weight:700;">Open Folder ➔</span>
         </div>
       `;
     });
@@ -376,7 +378,7 @@ window.openHighlightAlbum = async function(id, title) {
     let aHtml = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 4px;">
         <span style="font-size:0.9rem; font-weight:700; color:var(--text, #0f172a);">${title} (${json.items.length} items)</span>
-        <button onclick="document.getElementById('albumViewer').innerHTML=''" style="background:#e2e8f0; border:none; border-radius:6px; padding:4px 8px; font-size:0.75rem; cursor:pointer; font-weight:600;">âœ• Close</button>
+        <button onclick="document.getElementById('albumViewer').innerHTML=''" style="background:#e2e8f0; border:none; border-radius:6px; padding:4px 8px; font-size:0.75rem; cursor:pointer; font-weight:600;">✕ Close</button>
       </div>
       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
     `;
@@ -386,7 +388,7 @@ window.openHighlightAlbum = async function(id, title) {
         <div style="background:var(--card-bg, #ffffff); border-radius:12px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08); display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; aspect-ratio:9/16; background:#000;">
             <img src="${item.thumbnail || item.url}" alt="Item" style="width:100%; height:100%; object-fit:cover; display:block;">
-            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${item.type === 'video' ? 'â–¶' : 'â›¶'}</div>
+            <div style="position:absolute; top:6px; right:6px; color:white; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${item.type === 'video' ? '▶' : '⛶'}</div>
           </div>
           <div style="padding:8px;">
             <a href="${item.url}" download class="result-download-btn" style="background:#0284c7; color:white; padding:8px 4px; border-radius:6px; font-size:0.78rem; font-weight:700; text-align:center; text-decoration:none; display:block;">Download Item ${idx + 1}</a>
