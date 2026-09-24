@@ -2,7 +2,7 @@
    SPEEDDL - SCRIPT.JS (PART 1 OF 2)
    ============================================ */
 
-const API_URL = 'https://surgeon-folding-biz-lancaster.trycloudflare.com';
+const API_URL = 'https://etc-shorter-inspector-function.trycloudflare.com';
 
 const themeToggle = document.getElementById('themeToggle');
 const urlInput = document.getElementById('urlInput');
