@@ -2,7 +2,7 @@
    SPEEDDL - SCRIPT.JS
    ============================================ */
 
-const API_URL = 'https://facts-temporarily-leasing-exceptions.trycloudflare.com';
+const API_URL = 'https://scrapenest-backend.onrender.com';
 
 const themeToggle = document.getElementById('themeToggle');
 const urlInput = document.getElementById('urlInput');
