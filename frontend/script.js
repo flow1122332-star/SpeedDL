@@ -2,7 +2,7 @@
    SPEEDDL - SCRIPT.JS
    ============================================ */
 
-const API_URL = 'https://etc-shorter-inspector-function.trycloudflare.com';
+const API_URL = 'https://flexible-earned-villages-gathering.trycloudflare.com';
 
 const themeToggle = document.getElementById('themeToggle');
 const urlInput = document.getElementById('urlInput');
