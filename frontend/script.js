@@ -115,6 +115,12 @@ async function handleDownload() {
     return;
   }
 
+  const isValid = url.includes('instagram.com') || /^@?[\w.]{1,30}$/.test(url);
+  if (!isValid) {
+    status.textContent = 'Please enter a valid Instagram URL or @username';
+    return;
+  }
+
   showLoading();
 
   try {
@@ -190,12 +196,10 @@ function showResult(data) {
   }, 100);
 }
 
-// FASTDL INSPIRED MEDIA VIEW (Clean Card + Overlay Play Icon + Stats Box)
+// CLEAN SINGLE RESULT CARD (NO DUPLICATE SEARCH RESULT, NO FAKE 0 LIKES)
 function renderMediaView(data) {
   const medias = data.medias || [];
-  let html = `
-    <div style="text-align:center; font-size:1.05rem; font-weight:700; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>
-  `;
+  let html = '';
 
   medias.forEach((media, index) => {
     const isVideo = media.type === 'video';
@@ -204,7 +208,7 @@ function renderMediaView(data) {
     const cardId = `media-preview-${index}`;
 
     html += `
-      <div style="max-width:440px; margin:0 auto 28px; background:var(--card-bg, #ffffff); border-radius:16px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08);">
+      <div style="max-width:440px; margin:10px auto 24px; background:var(--card-bg, #ffffff); border-radius:16px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08);">
         <div id="${cardId}" style="position:relative; width:100%; aspect-ratio:4/5; background:#000; overflow:hidden;">
           <img src="${escapeHtml(previewImg)}" alt="Preview" style="width:100%; height:100%; object-fit:cover; display:block;">
           <div style="position:absolute; top:10px; right:10px; display:flex; gap:6px; color:white; font-size:0.95rem; text-shadow:0 1px 4px rgba(0,0,0,0.8); z-index:2;">
@@ -218,19 +222,15 @@ function renderMediaView(data) {
           ` : ''}
         </div>
 
-        <div style="padding:14px 16px 10px;">
+        <div style="padding:14px 16px 12px;">
           <a href="${escapeHtml(downloadUrl)}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px 16px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
             Download
           </a>
         </div>
 
-        <div style="margin:0 16px 16px; padding:12px; background:rgba(0,0,0,0.03); border-radius:10px; border:1px solid rgba(0,0,0,0.05); font-size:0.82rem; color:#64748b;">
-          <div style="display:flex; gap:16px; font-weight:600; margin-bottom:6px; color:var(--text, #334155);">
-            <span>❤️ ${(data.likes || 0).toLocaleString()} likes</span>
-            <span>💬 ${(data.comments || 0).toLocaleString()} comments</span>
-          </div>
-          ${data.title ? `<div style="color:#64748b; font-size:0.8rem; line-height:1.4;">${escapeHtml(data.title)}</div>` : ''}
-        </div>
+        ${data.title ? `
+          <div style="margin:0 16px 16px; padding:12px; background:rgba(0,0,0,0.03); border-radius:10px; border:1px solid rgba(0,0,0,0.05); font-size:0.84rem; color:var(--text, #334155); font-weight:600; line-height:1.5; white-space:pre-wrap;">${escapeHtml(data.title)}</div>
+        ` : ''}
       </div>
     `;
   });
@@ -249,7 +249,7 @@ window.playLiveVideo = function(containerId, videoUrl) {
    SPEEDDL - SCRIPT.JS (PART 2 OF 2)
    ============================================ */
 
-// FASTDL PROFILE VIEW (Stats, Bio, Avatar, 4 Sub-Tabs)
+// FASTDL PROFILE VIEW
 function renderProfileView(data) {
   const postsCount = (data.posts || []).length;
   const storiesCount = (data.stories || []).length;
@@ -258,8 +258,6 @@ function renderProfileView(data) {
 
   let html = `
     <div style="max-width:540px; margin:0 auto 20px;">
-      <div style="text-align:center; font-size:1.05rem; font-weight:700; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>
-      
       <div style="display:flex; align-items:flex-start; gap:18px; margin-bottom:14px; text-align:left;">
         <div style="position:relative; width:82px; height:82px; flex-shrink:0;">
           <img src="${escapeHtml(data.avatar)}" alt="Avatar" style="width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block; background:#1e293b;">
@@ -270,7 +268,6 @@ function renderProfileView(data) {
             <span>@${escapeHtml(data.username)}</span>
             <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" rel="noopener noreferrer" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
           </div>
-          <!-- Real Total Posts, Followers, Following -->
           <div style="display:flex; gap:18px; margin-bottom:8px; font-size:0.85rem; color:#64748b;">
             <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.postsCount || '0')}</b> posts</div>
             <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.followers || '0')}</b> followers</div>
@@ -281,7 +278,6 @@ function renderProfileView(data) {
         </div>
       </div>
 
-      <!-- 4 Live Clickable Tabs -->
       <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); margin:18px 0 16px;">
         <div class="profile-tab" data-tab="posts" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">POSTS (${postsCount})</div>
         <div class="profile-tab" data-tab="stories" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">STORIES (${storiesCount})</div>
@@ -513,4 +509,66 @@ function escapeHtml(text) {
 (function setYear() {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
+
+(function initAboutAnimations() {
+  function animateCount(el, target, duration = 1800) {
+    const isDecimal = target % 1 !== 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+
+      el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = isDecimal ? target.toFixed(1) : target;
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  const statsRow = document.querySelector('.stats-row');
+  if (statsRow) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.stats-row .stat-item').forEach((item, i) => {
+            setTimeout(() => item.classList.add('visible'), i * 150);
+          });
+          document.querySelectorAll('.stats-row .count-up').forEach((el, i) => {
+            const target = parseFloat(el.closest('.stat-item').dataset.count);
+            setTimeout(() => animateCount(el, target), i * 150);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(statsRow);
+  }
+
+  const slider = document.getElementById('reviewsSlider');
+  const dots = document.querySelectorAll('.slider-dots .dot');
+  if (slider && dots.length) {
+    slider.addEventListener('scroll', () => {
+      const cardWidth = slider.querySelector('.review-card')?.offsetWidth + 20 || 340;
+      const activeIndex = Math.round(slider.scrollLeft / cardWidth);
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === activeIndex);
+      });
+    }, { passive: true });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const cardWidth = slider.querySelector('.review-card')?.offsetWidth + 20 || 340;
+        slider.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+      });
+    });
+  }
 })();
