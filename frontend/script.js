@@ -1,5 +1,5 @@
 /* ============================================
-   SPEEDDL - SCRIPT.JS
+   SPEEDDL - COMPLETE JAVASCRIPT (PART 1 OF 2)
    ============================================ */
 
 const API_URL = 'https://scrapenest-backend.onrender.com';
@@ -18,11 +18,9 @@ const homeContent = document.getElementById('homeContent');
 
 let globalProfileData = null;
 
-/* ---------- Theme Init (respects system preference) ---------- */
 (function initTheme() {
   const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+  if (savedTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
   }
 })();
@@ -40,7 +38,6 @@ if (themeToggle) {
   });
 }
 
-/* ---------- URL Tab Parameter Handler ---------- */
 (function handleTabParameter() {
   const params = new URLSearchParams(window.location.search);
   const tab = params.get('tab');
@@ -79,7 +76,6 @@ if (themeToggle) {
   }, 300);
 })();
 
-/* ---------- Paste Button ---------- */
 if (pasteBtn) {
   pasteBtn.addEventListener('click', async () => {
     try {
@@ -94,7 +90,6 @@ if (pasteBtn) {
   });
 }
 
-/* ---------- Clear Button ---------- */
 if (clearBtn) {
   clearBtn.addEventListener('click', () => {
     urlInput.value = '';
@@ -105,17 +100,13 @@ if (clearBtn) {
   });
 }
 
-/* ---------- Download Button + Enter Key ---------- */
 if (downloadBtn) {
   downloadBtn.addEventListener('click', handleDownload);
-  urlInput.addEventListener('keydown', e => {
+  urlInput.addEventListener('keypress', e => {
     if (e.key === 'Enter') handleDownload();
   });
 }
-/* ---------- Instagram URL Validation ---------- */
-const IG_URL_REGEX = /^https?:\/\/(www\.)?instagram\.com\/(p|reel|reels|tv|stories)\/[\w-]+/i;
 
-/* ---------- Handle Download ---------- */
 async function handleDownload() {
   const url = urlInput.value.trim();
 
@@ -124,28 +115,14 @@ async function handleDownload() {
     return;
   }
 
-  // URL validation (Allow ALL Instagram links and usernames)
-const isValid = url.includes('instagram.com') || /^@?[\w.]{1,30}$/.test(url);
-if (!isValid) {
-  status.textContent = 'Please enter a valid Instagram URL or @username';
-  return;
-}
-
   showLoading();
-
-  // AbortController for timeout
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
     const response = await fetch(`${API_URL}/api/download`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
-      signal: controller.signal
+      body: JSON.stringify({ url })
     });
-
-    clearTimeout(timeoutId);
 
     const data = await response.json();
 
@@ -160,17 +137,10 @@ if (!isValid) {
     showResult(data);
 
   } catch (err) {
-    clearTimeout(timeoutId);
-
-    if (err.name === 'AbortError') {
-      showError('Request timed out. Please try again.');
-    } else {
-      showError(err.message);
-    }
+    showError(err.message);
   }
 }
 
-/* ---------- Show Loading ---------- */
 function showLoading() {
   if (homeContent) homeContent.classList.add('hidden');
   if (resultsSection) resultsSection.classList.add('hidden');
@@ -180,7 +150,6 @@ function showLoading() {
   if (pasteBtn) pasteBtn.classList.add('hidden');
   if (clearBtn) clearBtn.classList.remove('hidden');
   status.textContent = '';
-  if (loadingText) loadingText.textContent = '';
 
   const url = urlInput.value.toLowerCase();
   let mediaType = 'media';
@@ -201,7 +170,6 @@ function showLoading() {
   }, 100);
 }
 
-/* ---------- Show Result ---------- */
 function showResult(data) {
   if (loadingSection) loadingSection.classList.add('hidden');
 
@@ -222,21 +190,66 @@ function showResult(data) {
   }, 100);
 }
 
-/* ---------- Show Error ---------- */
-function showError(message) {
-  if (loadingSection) loadingSection.classList.add('hidden');
-  if (homeContent) homeContent.classList.remove('hidden');
-  if (loadingText) loadingText.textContent = '';
+// FASTDL INSPIRED MEDIA VIEW (Clean Card + Overlay Play Icon + Stats Box)
+function renderMediaView(data) {
+  const medias = data.medias || [];
+  let html = `
+    <div style="text-align:center; font-size:1.05rem; font-weight:700; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>
+  `;
 
-  status.textContent = 'Error: ' + message;
-  downloadBtn.disabled = false;
+  medias.forEach((media, index) => {
+    const isVideo = media.type === 'video';
+    const downloadUrl = media.url;
+    const previewImg = media.thumbnail || downloadUrl;
+    const cardId = `media-preview-${index}`;
 
-  const inputBox = document.querySelector('.input-box');
-  if (inputBox) {
-    inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
+    html += `
+      <div style="max-width:440px; margin:0 auto 28px; background:var(--card-bg, #ffffff); border-radius:16px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.08);">
+        <div id="${cardId}" style="position:relative; width:100%; aspect-ratio:4/5; background:#000; overflow:hidden;">
+          <img src="${escapeHtml(previewImg)}" alt="Preview" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <div style="position:absolute; top:10px; right:10px; display:flex; gap:6px; color:white; font-size:0.95rem; text-shadow:0 1px 4px rgba(0,0,0,0.8); z-index:2;">
+            ${isVideo ? '<span>▶</span>' : ''}
+            <span>⛶</span>
+          </div>
+          ${isVideo ? `
+            <div onclick="playLiveVideo('${cardId}', '${escapeHtml(downloadUrl)}')" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(0,0,0,0.15); z-index:1;">
+              <div style="width:56px; height:56px; background:rgba(255,255,255,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:#0284c7; padding-left:4px; box-shadow:0 4px 15px rgba(0,0,0,0.25);">▶</div>
+            </div>
+          ` : ''}
+        </div>
+
+        <div style="padding:14px 16px 10px;">
+          <a href="${escapeHtml(downloadUrl)}" download class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px 16px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
+            Download
+          </a>
+        </div>
+
+        <div style="margin:0 16px 16px; padding:12px; background:rgba(0,0,0,0.03); border-radius:10px; border:1px solid rgba(0,0,0,0.05); font-size:0.82rem; color:#64748b;">
+          <div style="display:flex; gap:16px; font-weight:600; margin-bottom:6px; color:var(--text, #334155);">
+            <span>❤️ ${(data.likes || 0).toLocaleString()} likes</span>
+            <span>💬 ${(data.comments || 0).toLocaleString()} comments</span>
+          </div>
+          ${data.title ? `<div style="color:#64748b; font-size:0.8rem; line-height:1.4;">${escapeHtml(data.title)}</div>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  if (resultContent) resultContent.innerHTML = html;
 }
-/* ---------- Render Profile View ---------- */
+
+window.playLiveVideo = function(containerId, videoUrl) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = `
+    <video src="${videoUrl}" controls autoplay playsinline style="width:100%; height:100%; object-fit:contain; background:#000;"></video>
+  `;
+};
+/* ============================================
+   SPEEDDL - SCRIPT.JS (PART 2 OF 2)
+   ============================================ */
+
+// FASTDL PROFILE VIEW (Stats, Bio, Avatar, 4 Sub-Tabs)
 function renderProfileView(data) {
   const postsCount = (data.posts || []).length;
   const storiesCount = (data.stories || []).length;
@@ -245,6 +258,8 @@ function renderProfileView(data) {
 
   let html = `
     <div style="max-width:540px; margin:0 auto 20px;">
+      <div style="text-align:center; font-size:1.05rem; font-weight:700; color:var(--text, #1e293b); margin-bottom:18px;">Search result</div>
+      
       <div style="display:flex; align-items:flex-start; gap:18px; margin-bottom:14px; text-align:left;">
         <div style="position:relative; width:82px; height:82px; flex-shrink:0;">
           <img src="${escapeHtml(data.avatar)}" alt="Avatar" style="width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid #38bdf8; display:block; background:#1e293b;">
@@ -255,8 +270,9 @@ function renderProfileView(data) {
             <span>@${escapeHtml(data.username)}</span>
             <a href="https://www.instagram.com/${escapeHtml(data.username)}/" target="_blank" rel="noopener noreferrer" style="color:#0284c7; text-decoration:none; font-size:0.9rem;">↗</a>
           </div>
+          <!-- Real Total Posts, Followers, Following -->
           <div style="display:flex; gap:18px; margin-bottom:8px; font-size:0.85rem; color:#64748b;">
-            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${postsCount}</b> posts</div>
+            <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.postsCount || '0')}</b> posts</div>
             <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.followers || '0')}</b> followers</div>
             <div><b style="color:var(--text, #0f172a); font-size:0.95rem;">${escapeHtml(data.following || '0')}</b> following</div>
           </div>
@@ -265,6 +281,7 @@ function renderProfileView(data) {
         </div>
       </div>
 
+      <!-- 4 Live Clickable Tabs -->
       <div style="display:flex; border-bottom:1px solid rgba(0,0,0,0.1); margin:18px 0 16px;">
         <div class="profile-tab" data-tab="posts" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#0284c7; border-bottom:2px solid #0284c7; text-transform:uppercase; cursor:pointer;">POSTS (${postsCount})</div>
         <div class="profile-tab" data-tab="stories" style="flex:1; text-align:center; padding:10px 4px; font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; cursor:pointer;">STORIES (${storiesCount})</div>
@@ -278,7 +295,6 @@ function renderProfileView(data) {
 
   if (resultContent) resultContent.innerHTML = html;
 
-  // Attach tab click handlers (XSS-safe, CSP-friendly)
   resultContent.querySelectorAll('.profile-tab').forEach(tabEl => {
     tabEl.addEventListener('click', () => {
       switchActiveTab(tabEl.dataset.tab);
@@ -290,12 +306,11 @@ function renderProfileView(data) {
   else if (highlightsCount > 0) switchActiveTab('highlights');
   else if (reelsCount > 0) switchActiveTab('reels');
 }
-/* ---------- Switch Active Tab ---------- */
+
 function switchActiveTab(tab) {
   const data = globalProfileData;
   if (!data) return;
 
-  // Update tab button styles
   document.querySelectorAll('.profile-tab').forEach(tabEl => {
     if (tabEl.dataset.tab === tab) {
       tabEl.style.color = '#0284c7';
@@ -309,7 +324,6 @@ function switchActiveTab(tab) {
   const content = document.getElementById('profileTabContent');
   if (!content) return;
 
-  /* ---------- 1. POSTS ---------- */
   if (tab === 'posts') {
     const posts = data.posts || [];
     if (posts.length === 0) {
@@ -335,8 +349,6 @@ function switchActiveTab(tab) {
     html += `</div>`;
     content.innerHTML = html;
   }
-
-  /* ---------- 2. REELS ---------- */
   else if (tab === 'reels') {
     const reels = data.reels || [];
     if (reels.length === 0) {
@@ -361,8 +373,6 @@ function switchActiveTab(tab) {
     html += `</div>`;
     content.innerHTML = html;
   }
-
-  /* ---------- 3. STORIES ---------- */
   else if (tab === 'stories') {
     const stories = data.stories || [];
     if (stories.length === 0) {
@@ -386,8 +396,6 @@ function switchActiveTab(tab) {
     sHtml += `</div>`;
     content.innerHTML = sHtml;
   }
-
-  /* ---------- 4. HIGHLIGHTS ---------- */
   else if (tab === 'highlights') {
     const hls = data.highlights || [];
     if (hls.length === 0) {
@@ -407,7 +415,6 @@ function switchActiveTab(tab) {
     hHtml += `</div><div id="albumViewer" style="margin-top:20px;"></div>`;
     content.innerHTML = hHtml;
 
-    // Attach highlight click handlers (XSS-safe)
     content.querySelectorAll('.highlight-card').forEach(card => {
       card.addEventListener('click', () => {
         openHighlightAlbum(card.dataset.id, card.dataset.title);
@@ -415,7 +422,7 @@ function switchActiveTab(tab) {
     });
   }
 }
-/* ---------- Open Highlight Album ---------- */
+
 async function openHighlightAlbum(id, title) {
   const viewer = document.getElementById('albumViewer');
   if (!viewer) return;
@@ -455,7 +462,6 @@ async function openHighlightAlbum(id, title) {
     aHtml += `</div>`;
     viewer.innerHTML = aHtml;
 
-    // Close button handler (XSS-safe, CSP-friendly)
     const closeBtn = document.getElementById('closeAlbumBtn');
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
@@ -467,38 +473,21 @@ async function openHighlightAlbum(id, title) {
     viewer.innerHTML = `<p style="color:#ef4444; font-size:0.85rem; text-align:center;">Error: ${escapeHtml(err.message)}</p>`;
   }
 }
-/* ---------- Render Media View ---------- */
-function renderMediaView(data) {
-  const medias = data.medias || [];
-  let html = '';
 
-  medias.forEach((media, index) => {
-    const isVideo = media.type === 'video';
-    const downloadUrl = media.url;
-    const quality = media.quality || 'HD Video';
+function showError(message) {
+  if (loadingSection) loadingSection.classList.add('hidden');
+  if (homeContent) homeContent.classList.remove('hidden');
+  if (loadingText) loadingText.textContent = '';
 
-    const mediaElement = isVideo
-      ? `<video src="${escapeHtml(downloadUrl)}" poster="${escapeHtml(media.thumbnail || '')}" controls playsinline preload="metadata" class="result-preview" style="width:100%; max-width:360px; aspect-ratio:9/16; border-radius:14px; background:#000; margin:0 auto; display:block; object-fit:contain;"></video>`
-      : `<img src="${escapeHtml(downloadUrl)}" alt="Preview" class="result-preview" loading="lazy" style="width:100%; max-width:400px; max-height:500px; border-radius:14px; object-fit:contain; background:#0c0f17; margin:0 auto; display:block;">`;
+  status.textContent = 'Error: ' + message;
+  downloadBtn.disabled = false;
 
-    html += `
-      <div class="result-card" style="${index > 0 ? 'margin-top: 24px;' : ''}; max-width:460px; margin-left:auto; margin-right:auto;">
-        ${mediaElement}
-        <div class="result-actions" style="margin-top: 14px;">
-          <a href="${escapeHtml(downloadUrl)}" download rel="noopener noreferrer" class="result-download-btn" style="display:block; text-align:center; background:#0284c7; color:white; padding:12px; border-radius:10px; font-weight:700; text-decoration:none; font-size:0.95rem;">
-            Download${medias.length > 1 ? ` (Item ${index + 1})` : ''} - ${escapeHtml(quality)}
-          </a>
-        </div>
-        ${data.title ? `<div class="result-caption" style="margin-top: 10px; font-weight:600; font-size:0.88rem; text-align:center;">${escapeHtml(data.title)}</div>` : ''}
-        ${data.username ? `<div class="result-caption" style="color:#0284c7; font-size:0.85rem; text-align:center;">@${escapeHtml(data.username)}</div>` : ''}
-      </div>
-    `;
-  });
-
-  if (resultContent) resultContent.innerHTML = html;
+  const inputBox = document.querySelector('.input-box');
+  if (inputBox) {
+    inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 }
 
-/* ---------- Escape HTML (XSS-safe) ---------- */
 function escapeHtml(text) {
   if (text === null || text === undefined) return '';
   return String(text)
@@ -510,83 +499,18 @@ function escapeHtml(text) {
     .replace(/`/g, '&#96;');
 }
 
-/* ---------- Set Year in Footer ---------- */
+(function initLazyLoading() {
+  if ('loading' in HTMLImageElement.prototype) {
+    document.querySelectorAll('img:not([loading])').forEach(img => {
+      if (!img.closest('header') && !img.classList.contains('hero-logo')) {
+        img.loading = 'lazy';
+        img.decoding = 'async';
+      }
+    });
+  }
+})();
+
 (function setYear() {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
-/* ============================================
-   ABOUT PAGE ANIMATIONS
-   ============================================ */
-
-(function initAboutAnimations() {
-
-  /* ---------- Count-Up Animation ---------- */
-  function animateCount(el, target, duration = 1800) {
-    const isDecimal = target % 1 !== 0;
-    const startTime = performance.now();
-
-    function update(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = target * eased;
-
-      el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        el.textContent = isDecimal ? target.toFixed(1) : target;
-      }
-    }
-
-    requestAnimationFrame(update);
-  }
-
-  /* ---------- Stats Reveal + Count Up ---------- */
-  const statsRow = document.querySelector('.stats-row');
-  if (statsRow) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          document.querySelectorAll('.stats-row .stat-item').forEach((item, i) => {
-            setTimeout(() => item.classList.add('visible'), i * 150);
-          });
-          document.querySelectorAll('.stats-row .count-up').forEach((el, i) => {
-            const target = parseFloat(el.closest('.stat-item').dataset.count);
-            setTimeout(() => animateCount(el, target), i * 150);
-          });
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-    observer.observe(statsRow);
-  }
-
-  /* ---------- Reviews Slider Dots ---------- */
-  const slider = document.getElementById('reviewsSlider');
-  const dots = document.querySelectorAll('.slider-dots .dot');
-  if (slider && dots.length) {
-    slider.addEventListener('scroll', () => {
-      const cardWidth = slider.querySelector('.review-card')?.offsetWidth + 20 || 340;
-      const activeIndex = Math.round(slider.scrollLeft / cardWidth);
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === activeIndex);
-      });
-    }, { passive: true });
-
-    // Dot click → scroll to card
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        const cardWidth = slider.querySelector('.review-card')?.offsetWidth + 20 || 340;
-        slider.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
-      });
-    });
-  }
-
-})();
-
-/* ============================================
-   END OF SCRIPT.JS
-   ============================================ */
